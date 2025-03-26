@@ -1,0 +1,201 @@
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  border-radius: 0px;
+  overflow: hidden;
+  /* background: linear-gradient(to right, rgba(255, 111, 0, 0.5), rgba(230, 81, 0, 0.5), rgba(216, 67, 21, 0.5), rgba(183, 28, 28, 0.5)); */
+  background: linear-gradient(to right, rgba(106, 172, 214, 0.8), rgba(80, 150, 200, 0.8), rgba(60, 130, 190, 0.8));
+
+
+}
+
+
+
+.login-left, .login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* .login-left {
+  background: #fff;
+  flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+
+} */
+
+.login-left {
+  background: #fff;
+  flex-direction: column;
+  padding: 40px; /* Ensure proper spacing inside */
+  /* box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 30px, rgba(0, 0, 0, 0.3) 0px 10px 20px; */
+  border-radius: 10px; /* Slightly rounded corners for better aesthetics */
+  /* background: linear-gradient(to left, rgba(255, 111, 0, 0.7), rgba(230, 81, 0, 0.7), rgba(216, 67, 21, 0.7), rgba(183, 28, 28, 0.7)); */
+  /* background: linear-gradient(to right, rgba(255, 111, 0, 0.5), rgba(230, 81, 0, 0.5), rgba(216, 67, 21, 0.5), rgba(183, 28, 28, 0.5)); */
+  background: linear-gradient(to left, rgba(106, 172, 214, 0.8), rgba(80, 150, 200, 0.8), rgba(60, 130, 190, 0.8));
+
+}
+
+/* .login-content {
+  text-align: center;
+  width: 100%;
+  max-width: 350px;
+  /* box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px; */
+  
+/* } */  
+
+.login-content {
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px; /* Add padding inside */
+  background: white;
+  /* box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 30px, rgba(0, 0, 0, 0.2) 0px 8px 20px; */
+  /* box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; */
+  /* box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; */
+  /* box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px; */
+  /* box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px; */
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  border-radius: 8px; /* Give a slight curve to make it stand out */
+  margin-bottom: -80px;
+}
+
+.logo {
+  width: 70px;
+  margin-bottom: 15px;
+  
+}
+
+.input-group {
+  margin: 10px 0;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 15px;
+  color:#0D3B66;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  /* background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593); */
+  /* background: linear-gradient(to right, #ff6f00, #e65100, #b71c1c, #C90000); */
+  /* background: linear-gradient(to right, #ff9800, #ff7043, #d84315, #b71c1c); */
+  /* background: linear-gradient(to right, #ff6f00, #e65100, #d84315, #b71c1c); */
+  /* box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 30px, rgba(0, 0, 0, 0.2) 0px 8px 20px; */
+
+  background: linear-gradient(to right, rgba(106, 172, 214, 0.8), rgba(80, 150, 200, 0.8), rgba(60, 130, 190, 0.8));
+
+  
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.forgot-password {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.signup-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.create-btn {
+  border: 1px solid red;
+  color: red;
+  background: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;
+
+}
+
+.login-right {
+  /* background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593); */
+  /* background: linear-gradient(to right, #ff6f00, #e65100, #b71c1c,   #C90000); */
+  /* background: linear-gradient(to right, #ff9800, #ff7043, #d84315, #b71c1c); */
+  /* background: linear-gradient(to right, #ff6f00, #e65100, #d84315, #b71c1c); */
+  /* background: linear-gradient(to right, rgba(255, 111, 0, 0.7), rgba(230, 81, 0, 0.7), rgba(216, 67, 21, 0.7), rgba(183, 28, 28, 0.7)); */
+
+
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lotus-team {
+  font-style: italic;
+  font-size: 2.0rem; /* Increase the size */
+  color: #0D3B66;
+}
+.Icici-name{
+  color: #0D3B66;
+}
+
+.lotus-team span {
+  font-weight: bold; /* Make "We" darker */
+  color:  #0D3B66;; /* Darker shade for emphasis */
+}
+
+.logo-container{
+  margin-bottom: 50px;
+}
+
+.login-text {
+display: block;  /* Ensures it behaves like a block element */
+  font-size: 18px; /* Adjust font size if needed */
+  text-align: left;
+  font-weight: bolder  ;
+  color: #0D3B66;
+}
+
+
+.form-outline {
+  margin-bottom: 25px; /* Increase spacing between input fields */
+}
+
+.Wrm-logo {
+width: 600px;
+margin-bottom: 15px;
+box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 10px, rgba(0, 0, 0, 0.2) 0px 2px 6px;
+border-radius: 10px; /* Optional: Soft rounded edges */
+background: white; /* White background */
+}
+
+
+.DWH-heading {
+  display: block;  /* Ensures it behaves like a block element */
+  font-size: 35px; /* Adjust font size if needed */
+  text-align: left;
+  font-weight: bolder  ;
+  margin-bottom: 50px;
+  color:#0D3B66;
+}
+
+
+
+
+
