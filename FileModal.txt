@@ -1,0 +1,3990 @@
+Import {Col, InputNumber, Modal, Row, Slider} from antd;
+Import React, {useCallback, useContext, useffect, usestate } from 'react';
+Import "./FileModal.css"
+Import axios from 'axios';
+import TableFile from './Tablefile/Tablefile';
+Import Pagination from "mui/material/Pagination";
+Import Stack from "@mui/material/Stack";
+Import * as XLSX from 'xlsx';
+Import Papa from papaparse';
+Import Statecontext from '../../../context/Statecontest':
+import Dropdown from 'rsuite/Dropdown';
+Import 'rsuite/dist/rsuite.min.css';
+import (Select, Input) from 'antd':
+Import {ThreeDots} from "react-loader-spinner";
+Import Box from '@mui/material/Box';
+Import LinearProgress from '@mul/material/LinearProgress';
+Import { ToastContainer , toast } from 'react-toastify":
+Import (IoNdClose) from "react-icons/io":
+Import (Select as AntSelect, FormControl, ForsControllabel, Forairoup, Inputtabel, Menu, MenuItem) from '@mul/material';
+Import CheckboxComponent from './CheckboxComponent';
+import {Button} from '@mui/material';
+Import (DatePicker) from "antd";
+Import (Isafter, startOfDay, subDays) from 'date-fns';
+Import TextField from '@mui/material/node/TextField';
+Import { ArrowDropDownIcon) from 'mal/x-date-pickers";
+
+26 import moment from 'moment/noment":
+
+27
+
+28 const (RangePicker) DatePicker:
+
+
+const Fileflodal (props)> (
+
+const {modalopen, setlodalopen) - props;
+
+const { filellaneTosend, apiBaseurl, setlogoutTisers, foldertiase, userSubResult,, checkedColum
+
+15
+
+const [pdata, setPdata) useState((()));
+
+const [searchpdata, setSearchPdata] useState((()));
+
+const [checkedColumnOption, setCheckedColumnOption] useState([])
+
+const (fullDataToDownloadloader, setFullDataToDownloadloader) useState(false);
+
+const [page, setPage) useState(1);
+
+const [pagefilter, setPagefilter] - useState(1);
+
+41
+
+const [musRows, setllumRows] useState(1)
+
+42
+
+const [accessGranted, setAccessGranted] useState(true);
+
+43
+
+const [file modal_Loader, setFile_modal_Loader) useState(false);
+
+44
+
+const [sortColumn, setSortColumn] useState('');
+
+45
+
+const [sortorder, setSortorder] useState('');
+
+46
+
+const [nolata, setlicData) useState(false);
+
+47
+
+const [noDataError, setlioDataError) useState(false);
+
+48
+
+const [datefromsfile, setDatefromFile) useState(null);
+
+49
+
+const [maxRousPerSheet, setRaxRowsPerSheet] useState(700000);
+
+50
+
+const userid sessionstorage.getItem('userId"); // const userld localStorage.getiten('userId');
+
+I
+
+51
+
+52
+
+const [cancelTokenSource, setCancelTokenSource] useState(null);
+
+53
+
+const [startDataTable, setStartDate] useState(null);
+
+54
+
+const [endDateTable, setEndDate)- usestate(null);
+
+55
+
+const [selecteditens, setSelectedItems) usestate();
+
+56
+
+const [pagewithoate, setPageWithDate] useState(false);
+
+
+
+
+const [pageWithDate, setPageWithDate) useState(false);
+
+const [OPTIONS, setOPTIONS) useState(())
+
+const [columnOPTIONS, setColumnOPTIONS) - useState([]);
+
+const [searchTextForFilter, setSearchTextForFilter) useState('')
+
+censt [dropdownSelectedColumn, setDropdown SelectedColumn) - useState("")
+
+const [searchTerm, setSearchTerm) useState('');
+
+nst [showConsentForm, setShowConsentForm] useState(false);
+
+[isChecked, setIsChecked) useState(false);
+
+const [isSubmitting, setIsSubmitting) useState(false);
+
+const [fileDownloadRequest, setFileDownloadRequest] - useState(null);
+
+const [downloadFileName, setDownloadFileName] useState();
+
+const [columns, setColumns) useState([]);
+
+14-
+
+const [dropdownSelectedColumnsFormCheckBox, setDropdownSelectedColumnsFormCheckBox] - useState([]);
+
+const [isopen, setIsOpen) useState(false);
+
+const [anchorEl, setAnchorEl] useState(null);
+
+const [sublenuAnchorEl, setSubMenuAnchorEl] - useState(null);
+
+const [subRenuAnchorE12, setSubMenuAnchorE12] useState(null);
+
+const [currentSubMenu, setCurrentSubMenu] useState('');
+
+const [inputValue, setInputValue) useState(700000);
+
+const [valueSearchText, setValueSearchText] useState('') const [selectedSearchColumn, setSelectedSearchColumn] - useState('')
+
+const userñole sessionStorage.getItem("userñole") || "";
+
+const token sessionStorage.getItem("token");
+
+const pageSize= 100;
+
+Eet userDownload sessionStorage.getItem("userDownload");
+
+const onChange (newValue) => { 14 (newValue < 0) ( setInputValue(1)
+
+87
+
+88
+
+else {
+
+setInputValue(newValue);
+
+90
+
+91
+
+92
+
+03
+
+94
+
+95
+
+96
+
+nt s
+
+97
+
+08
+
+09
+
+100
+
+101
+
+102
+
+103
+
+104
+
+105
+
+106
+
+107
+
+108
+
+tion.js
+
+100
+
+110
+
+111
+
+const handleClick (event) -> ( setAnchorB1(event.currentTarget);
+
+const handleClose() => {
+
+}}
+
+// setCheckedColumns([]);
+
+setAnchor1(null);
+
+setSubMenuAnchorel (null);
+
+setSubMenuAnchor E12 (null);
+
+setCurrentSubMenu();
+
+const handleSubMenuClick = (event, subMenu) => { setCurrentSubMenu (subMenu); setSubMenuAnchorEl (event.currentTarget);
+
+const handleSubMenuClick2 (event) => { setSubMenuAnchorE12 (event.currentTarget);
+};
+
+const handleToggle - () -> { setIsOpen(11sOpen); };
+
+118
+
+119
+
+120
+
+const handleCheckboxClick (e) => {
+
+121
+
+122
+
+// e.stopPropagation(); // Prevent event propagation to the Select
+
+123
+
+};
+
+124
+
+125
+
+const from moment(datefromfile);
+
+126
+
+127
+
+const disableDate (current) => {
+
+128
+
+if (userRole 'User') {
+
+129
+
+if (from) {
+
+130
+
+131
+
+132
+
+133
+
+const minDate from. Clone().add(-3, 'days');
+
+return ( current.isAfter(from, "day") || current.isBefore(minDate, "day") );
+
+134
+
+135
+
+}
+
+136
+
+} else {
+
+137
+
+138
+
+139
+
+return current.isAfter(from, "day");
+
+return false;
+
+140
+
+};
+
+const handleDateChange (dates)( If (dates &8 dates.length > 2) (
+
+setFile_modal Loader As
+
+const (day, month, year] datefromfile.split("/").map(Number);
+
+Create a Date object
+
+const formatted_date new Date(year, month 1, day);
+
+const maxBusinessDateStr formatted_date;
+
+const maxBusinessDate new Date(Date.parse(maxBusinessDateStr));
+
+//Calculate the start date limit (4 days from max business date)
+
+const startDatelinit new Date(maxBusinessDate);
+
+startDateLimit.setDate(startDateLimit.getDate()-4);
+
+const endDateLimit- new Date(maxBusinessDate);
+
+endDateLimit.setDate(endDateLimit.getDate() + 1);
+
+450
+
+151
+
+152
+
+153
+
+154
+
+155
+
+156
+
+157
+
+154
+
+159
+
+160
+
+lot sdate now Date(dates[0]);
+
+161
+
+162
+
+163
+
+164
+
+165
+
+166
+
+167
+
+168
+
+169
+
+170
+
+sdate.setDate(sdate.getDate() + 1);
+
+let edate new Date(dates[1]);
+
+edate.setDate(edate.getDate() + 1);
+
+
+if (userRole 'User') {
+
+if (edate > endDateLimit) (
+
+}
+
+toast.error("End Date is Out of Permited Range...", (theme: "colored" });
+
+setPageWithDate(false);
+
+else if (sdate < startDateLimit) {
+
+}
+
+toast.error("Start Date is Out of Permited Range...", {theme: "colored" });
+
+setPageWithDate(false);
+
+else {
+
+}
+
+}
+
+2
+
+setStartDate(sdate.toISOString().split('T')[0]);
+
+fetchContentInFileswithDate(fileNameTosend, page, sdate.to150String().split('T')[0], edate.
+
+toISOString().split('T')[0])
+
+else {
+
+3
+
+4
+
+35
+
+36
+
+} setEndDate(edate ? edate.toISOString().split('T')[0]: '');
+
+87
+
+setStartDate(sdate.toISOString().split('T')[0]);
+
+fetchContentInFilesMithDate(fileNameTosend, page, sdate.to150String().split('T')[0], edate.
+
+to150String().split('T')[0])
+
+88
+
+} else {
+
+189
+
+setStartDate(null);
+
+190
+
+setEndDate(null);
+
+191
+
+setPageWithDate(false);
+
+192
+
+}
+
+193
+
+};
+
+
+
+
+fetchContentInFileswithDate
+
+nouPage, start, and
+
+setFile_modal_Loader();
+
+if (valueSearchText.trim()){
+
+handleSearchText(newPage, selectedSearchColum, valueSearchText)
+
+} else (
+
+try (
+
+const getContentInFilesApiUrl = $(ap1Baseunl)api/Reporthodules/getnodaldatanithDate
+
+const urlForApi - getContent InFilesäpiiri;
+
+const filesResponse await axios.post(urlForApt,
+
+username: userId,
+
+filename: filellameTosend,
+
+foldername: foldertiame,
+
+checkedColumnName: checkedColumns.length > 0 ? checkedColumns: [").
+
+pagesize: pageSize,
+
+205
+
+207
+
+200
+
+209
+
+210
+
+211
+
+212
+
+213
+
+214
+
+215
+
+pagenumber: newPage,
+
+216
+
+startDate: start,
+
+217
+
+endDate: end
+
+216
+
+)(
+
+219
+
+withCredentials: true, });
+
+if (filesResponse.data "You dont have access to this data") {
+
+}
+
+setAccessGranted(false);
+
+setFile_modal_Loader(false);
+
+setPageWithDate(false);
+
+else if (filesResponse.data "No Data Found" || filesResponse.data.totalCount --- 0) {
+
+T setNoData(true)(s) setAccessGranted(false);
+
+setFile_modal_Loader(false);
+
+setPageWithDate(false);
+
+else
+
+setPageWithDate(true);
+
+let pro filesResponse.data.data;
+
+setPdata (pro);
+
+setSearchPdata(pro);
+
+setNumRows(filesResponse.data.totalCount);
+
+setAccessGranted(true);
+
+setPage(newPage);
+
+setFile_modal_Loader(false);
+
+89
+
+40
+
+1
+
+42
+
+3
+
+} catch (error) {
+
+44
+
+setPageWithDate(false);
+
+45
+
+if (error.response.status 404 || error.response.status 500) (
+
+46
+
+47
+
+setNoData(true)
+
+setAccessGranted(false);
+
+49
+
+setNoDataError(true);
+}
+
+console.error("Error fetching files in the folders", error);
+
+253
+
+254
+
+setFile_modal_Loader(false);
+
+255
+
+}
+
+256
+
+}
+
+257
+
+258
+
+259
+
+};
+
+260
+
+261
+
+262
+
+263
+
+264
+
+265
+
+266
+
+267
+
+268
+
+269
+
+270
+
+271
+
+272
+
+273
+
+getContentInFilesApiUrl;
+
+
+const filesResponse await axios.post(urlForApi,
+
+username: userId,
+
+folderName: folderName,
+
+fileName: e,
+
+columnName: checkedColumns.length > 0 ? checkedColumns: ["*"],
+
+pageSize: pageSize,
+
+pageNo: newPage
+
+withCredentials: true, }); I
+
+if (filesResponse.data "You dont have access to this data") {
+
+setAccessGranted(false);
+
+setNoData(true);
+
+setAccessGranted(false);
+
+setFile_modal_Loader (false);
+
+297
+
+} else {
+
+
+let pro filesResponse.data.data;
+
+300
+
+301
+
+302
+
+303
+
+304
+
+305
+
+306
+
+307
+
+300
+
+309
+
+310
+
+311
+
+312
+
+} } catch (error) (I
+
+313
+
+314
+
+315
+
+316
+
+317
+
+318
+
+}
+
+319
+
+320
+
+setPdata(pro);
+
+const convertedArray Object.keys(pro[0]).map(item-> ({
+
+value: item,
+
+label: item,
+
+setOPTIONS (convertedArray)
+
+setColumnOPTIONS (convertedArray)
+
+setSearchPdata(pro);
+
+setNumRows (filesResponse.data.totalCount);
+
+setAccessGranted(true);
+
+setPage(newPage);
+
+setFile_modal_Loader(false);
+
+if (error.response.status 404 || error.response.status 500) {
+
+setNoData(true)
+
+setAccessGranted(false);
+
+setNoDataError(true);
+
+console.error("Error fetching files in the folder:", error);
+
+setFile_modal_Loader(false);
+
+321
+
+}
+
+322
+
+323
+
+324
+
+
+
+
+useEffect(() => {
+
+// debugger;
+
+327
+
+328
+
+fetchColumns();
+
+329
+
+330
+
+331
+
+332
+
+1);
+
+333
+
+334
+
+335
+
+useEffect(() => {
+
+336
+
+337
+
+338
+
+339
+
+fetchContentInFiles(filellameTosend, page);
+
+fetchMaxdate()
+
+// fetchDropdownColmnsFormCheckBox()
+
+340
+
+341
+
+), [
+
+342
+
+searchTextForFilter,
+
+343
+
+setValueSearchText,
+
+344
+
+setSearchTextForFilter
+
+345
+
+checkedColumns
+
+346
+
+setSelectedSearchColumn
+
+347
+
+setInputValue
+
+348
+
+]);
+
+349
+
+350
+
+351
+
+const handleChange (event, value) => {
+
+if (checkedColumns.length > 0) {
+
+352
+
+fetchByColumnName(fileNameTosend, value)
+
+353
+
+}
+
+
+else if (pageWithDate false) {
+
+357
+
+} fetchContentInFiles(fileNameTosend, value)
+
+358
+
+else {
+
+359
+
+360
+
+}
+
+fetchContentInFilesWithDate(filellameTosend, value, startDateTable, endDateTable)
+
+361
+
+};
+
+362
+
+363
+
+const getFullFileData async (filename, fileTypes) => {
+
+364
+
+365
+
+366
+
+867
+
+368
+
+569
+
+878
+
+571
+
+72
+
+173
+
+74
+
+75
+
+76
+
+77
+
+78
+
+79
+
+31
+
+const source axios.CancelToken.source();
+
+setCancelTokenSource (source);
+
+setFullDataToDownloadloader (true);
+
+setlogoutTimers(30);
+
+sessionStorage.setItem("process", true);
+
+var getFullData ${apiBaseurl]api/ReportModules/";
+
+try {
+
+if (valueSearchText != '') {
+
+getFullData + GenerateFulFileDataFromTableAfterFilter;
+
+const filesResponse await axios.post(getFullData, {
+
+username: userId,
+
+filename: filename,
+
+foldername: folderName,
+
+checkedColumns: checkedColumns.length > 0 ? checkedColumns: ["*"],
+
+searchColumn: selectedSearchColumn,
+
+searchValue: valueSearchText,
+
+startDate: startDateTable
+
+endDate: endDateTable,
+
+fileFormat: fileTypes,
+
+maxRowsPerSheet: maxRousPerSheet
+
+}, {
+
+withCredentials: true,
+
+responseType: 'blob',
+
+cancelToken: source.token,
+
+});
+
+if (filesResponse.status 200) {
+
+const blob new Blob ([filesResponse.data], { type: filesResponse.headers['content-type'] });
+
+const url window.URL.createObjectURL(blob);
+
+const link document.createElement('a');
+
+link.href url;
+
+link.setAttrißute('download', '$(downloadFileName).zip");
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+setlogoutTimers(5);
+
+setFullData ToDownload loader (false);
+
+toast.success("Download successfully...", { theme: "colored" });
+
+} else {
+
+}
+
+setFullDataToDownload loader (false);
+
+setlogoutTimers(5);
+
+toast.error("Something went wrong...", {theme: "colored" });
+
+} else {
+
+const fullData getFullData + 'GetAlldataAndGenerateFile';
+
+
+const filesResponse avait axios.post(fullData,
+
+{
+
+"checkedColumns": checkedColumns.length > 0 ? checkedColumns: [""],
+
+"endDate": endDateTable,
+
+"fileFormat": fileTypes,
+
+"filename": filename,
+
+"foldername": folderName,
+
+"maxRowsPerSheet": maxRowsPerSheet,
+
+"startDate": startDateTable,
+
+"username": userId,
+
+headers: { I
+
+},
+
+'Content-Type': 'application/json',
+
+withCredentials: true,
+
+responseType: 'blob',
+
+cancelToken: source.token,
+
+});
+
+if (filesResponse.status = 200) {
+
+const blob new Blob ([filesResponse.data], { type: filesResponse.headers['content-type'] });
+
+const url window.URL.createObjectURL (blob);
+
+const link document.createElement('a');
+
+link.href url;
+
+link.setAttribute('download', '$fdownloadFileName).zip");
+
+link.click();
+
+9
+
+0
+
+1
+
+2
+
+3
+
+4
+
+2ink.setAttribute('download', 'S(downloadFileName).zip)
+
+document.body.appendChild(link)2
+
+document.body.removeChild(link)
+
+setlogoutTimers(S);
+
+setFullDataToDownloadloader (false);
+
+toast.success("Download successfully...". (theme: "colored" });
+
+} else {
+
+setFullDataToDownloadloader (false):
+
+setlogoutTimers(5);
+
+toast.error("Something went wrong...". ( theme: "colored"));
+
+}
+
+I
+
+} catch (error) {
+
+console.error("error", error);
+
+if (axios.isCancel(error)) {
+
+setlogoutTimers(5);
+
+setFullDataToDownloadloader (false);
+
+} else {
+
+console.error("Error fetching files in the folder:", error);
+
+toast.error("Something went wrong...". (theme: "colored");
+
+setlogoutTimers(5);
+
+6
+
+setFullDataToDownloadloader (false);
+
+0
+
+}
+
+1
+
+setlogoutTimers(5);
+
+2
+
+setFullDataToDownloadloader (false);
+
+
+
+} finally { sessionStorage.setItem("process", false); }
+
+461
+
+462
+
+463
+
+464
+
+465
+
+466
+
+};
+
+467
+
+468
+
+const cleanupAfterCancel() => {
+
+469
+
+setCancelTokenSource (null); setFullDataToDownloadloader (false); };
+
+470
+
+471
+
+472
+
+473
+
+const cancelDownload Download () => {
+
+474
+
+if (cancelTokenSource) {
+
+475
+
+// Cancel the API call
+
+476
+
+477
+
+478
+
+479
+
+cancelTokenSource.cancel('Download canceled'); sessionStorage.setItem("process", false);
+
+// Clean up after cancellation
+
+cleanupAfterCancel();
+
+480
+
+}
+
+481
+
+};
+
+482
+
+483
+
+484
+
+485
+
+486
+
+const handleConsentboxChange (e) -> {
+
+setIsChecked (e.target.checked)
+
+
+}
+
+488
+
+489
+
+const handleConsent FormClose() {
+
+490
+
+setShowConsentForm(false); setFileDownloadRequest(null); };
+
+491
+
+492
+
+setIsChecked (false);
+
+493
+
+494
+
+495
+
+const consentUpdate async () -> {
+
+496
+
+const consentDetails - (
+
+497
+
+"Username": userId,
+
+198
+
+"Folder": folderiame,
+
+"file": fileNameTosend,
+
+"type": fileDownload Request
+
+501
+
+502
+
+try {
+
+503
+
+Const ApiTofetch I $(apiBaseurl]api/UsersLogs/InsertConsentDetails";
+
+504
+
+const response await axios.post(ApiTofetch, consentDetails, {
+
+505
+
+withCredentials: true, headers: (
+
+506
+
+507
+
+"Content-Type": "application/json", }); if (response.status = 200) { console.error("API ERROR", response); } catch (error) ( console.error("The API error is", error);
+
+
+const handleConsent FormSubmit async () => {
+
+if (fileDownloadRequest) {
+
+consentUpdate():
+
+avait performFileDownload(fileDownloadRequest);
+
+handleConsent ForaClose();
+
+525
+
+526
+
+527
+
+528
+
+529
+
+$30
+
+531
+
+532
+
+533
+
+conat handleFileDownload (type)-> (
+
+handleClose();
+
+setFileDownloadRequest(type);
+
+setShowConsentForm(true);
+
+if (startDateTable 1- null && endDateTable 1 null) (
+
+setDownloadFileName(fileNameTosend('startDateTable.toString()+'+endDateTable.toString
+
+()+')');
+
+534
+
+else (
+
+535
+
+setDowmloadFileName(fileflame Tosend('datefromfile.toString())");
+
+$36
+
+537
+
+538
+
+339
+
+const performFileDownload async (e) -> (
+
+540
+
+userLogs();
+
+541
+
+// sendtail();
+
+542
+
+sessionStorage.setItem("process", true);
+
+541
+
+setFullDataToDownloadloader (true);
+
+
+
+
+}else if (e 'Chtxt') {
+
+const tabSeparatedContent convertToText (pdata);
+
+LoginLef
+
+Asab 7 of 21
+
+const blob new Blob ([tabSeparatedContent], (type: 'text/plain' });
+
+const url URI.createObjectURL (blob);
+
+const a document.createElement('a');
+
+a.href url;
+
+a.download "$(downloadFileName).txt';
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+} else if (e 'Ctxt') {
+
+const tabSeparatedContent convertToTextWithoutHeader(pdata);
+
+const blob new Blob ([tabSeparatedContent), (type: 'text/plain'));
+
+const url URI..createObjectURL(blob);
+
+574
+
+575
+
+576
+
+577
+
+578
+
+579
+
+580
+
+581
+
+582
+
+583
+
+584
+
+585
+
+586
+
+const a document.createElement('a');
+
+587
+
+a.href = url;
+
+588
+
+a.download "${dowmloadFileName).txt";
+
+589
+
+a.click();
+
+590
+
+URL.revokeObjectURL(url);
+
+591
+
+}
+
+592
+
+}
+
+593
+
+594
+
+catch (error) {
+
+//toast.success("Download successfully...". { theme: "colored" });
+
+595
+
+console.error("Error:", error);
+
+596
+
+finally (
+
+597
+
+setFullDataToDownloadloader(false);
+
+598
+
+setIsChecked(false);
+
+599
+
+sessionStorage.setItem("process", false);
+}};
+
+
+const convertToText (data) => {
+
+654
+
+if (Idata || data.length --- 8) ( return; }
+
+605
+
+627
+
+const columns Object.keys(data[0]);
+
+609
+
+610
+
+const collidths columns.map((col) ->
+
+611
+
+612
+
+Math.max(col.length, ...data.map((row) -> (row[col] ? row[col].toString().length: 0))) );
+
+613
+
+614
+
+const header columns.map((col, 1) -> col.padEnd(coliidths[1])).join('\t'); const separator colwidths.map((width) -> repeat(width)).join('\t');
+
+615
+
+615
+
+617
+
+const rous data.map((row) ->
+
+618
+
+columns.map((col, 1) -> (row[col] ? row[col].toString().padEnd (collidths[1]):.repeat(colwidths [1]))).join('\t') );
+
+619
+
+620
+
+621
+
+return [header, separator, ...rows).join('\n');
+
+622
+
+623
+
+}
+
+I
+
+624
+
+625
+
+const convertToTextilthout Header (data) -> (
+
+626
+
+627
+
+if (Idata || data.length) {
+
+return";
+
+629
+
+629
+
+630
+
+const columns Object.keys(data[0]);
+
+
+const collidths columns.map((cal)->
+
+Loginueftis
+
+> setFile modal Loader As
+
+of 21
+
+Math.max(col.length, ...data.map((row) (row[col]? row[col].toString().length: 0)))
+
+// const header-columns.map((col, 1) -> col.padend (collwidths[1])).join('\t');
+
+const separator colwidths.map((width) ->".repeat(width)).join('\t');
+
+const rous data.map((row) ->
+
+); columns.map((col, 1) > (row[col] ? row[col].toString().padEnd(colMidths[i]):.repeat(colMidths [1]))).join('\t')
+
+return [separator, ...rows).join('\n');
+
+545
+
+546
+
+547
+
+const sendtail async () -> {
+
+548
+
+649
+
+const mailDatasTosend - (
+
+550
+
+651
+
+652
+
+653
+
+<body>
+
+654
+
+655
+
+656
+
+657
+
+"to": [userId],
+
+"subject": "$(userId) Downloaded $(Filellame Tosend) File,
+
+"body": "<html>
+
+<p>Dear User,</p>
+
+I <p>This is to confirm that $(userId) has downloaded the file $(filellane Tosend) from our system.</p>
+
+<p>Thank you for using our services.</p>
+
+<p>Sincerely,</p>
+
+653
+
+<p>The ICICIHFC</p>
+
+</body>
+
+650
+
+</html>
+
+661
+
+}
+
+662
+
+try {
+
+663
+
+const ApiTofetch $(apiBaseurl]api/Email/SendEmail';
+
+664
+
+665
+
+666
+
+667
+
+668
+
+669
+
+const response await axios.post(ApiTofetch, mallDatas Tosend, (
+
+withCredentials: true,
+
+headers: {
+
+"Content-Type": "application/json',
+
+},
+
+670
+
+});
+
+671
+
+672
+
+if (response.status 200) {
+
+673
+
+} else {
+
+674
+
+675
+
+}
+
+676
+
+} catch (error) {
+
+677
+
+console.error("API ERROR", response);
+
+console.error("The API error is", error);
+
+678
+
+679
+
+I
+
+688
+
+681
+
+682
+
+const userlogs async () {
+
+683
+
+684
+
+"username": userid,
+
+685
+
+"action": "Download",
+
+685
+
+const nailDatas Tosend(
+
+"downloadUploadFile": fileltume Tosend
+}
+
+try {
+
+689
+
+690
+
+691
+
+692
+
+693
+
+694
+
+695
+
+696
+
+697
+
+698
+
+699
+
+}
+
+706
+
+} catch (error) {
+
+});
+
+"Content-Type": "application/json',
+
+if (response.status 200) {
+
+} else {
+
+console.error("API ERROR", response);
+
+console.error("The API error is", error);
+
+const handlesort (numrou) -> (
+
+setNumRows (nгом);
+
+I
+
+710
+
+711
+
+712
+
+// Debounce utility function
+
+713
+
+const debounce (func, delay) -> {
+
+Sonjs
+
+714
+
+Int timeoutId:
+
+715
+
+return (...args) {
+
+716
+
+if (timeoutId) clearTimeout(timeoutid);
+
+timeoutId setTimeout(() => func(...args), delay);
+
+ICIC Sund
+
+ModelContentMooelys
+
+க
+
+49
+
+};
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+226
+
+727
+
+728
+
+729
+
+730
+
+731
+
+732
+
+733
+
+734
+
+//Debounced version of SearchTextData
+
+const debouncedSearchTextData useCallback(debounce ((page, column, searchtexts)> (handleSearchText(page, column, searchtexts)), 1000), []);
+
+// Handle search text change
+
+const handleAllTextSearch(e){
+
+const searchWalusText e.target.value;
+
+console.log("search text", searchValueText)
+
+setSearchTextForFilter(searchValueText);
+
+if(searchValueText')(
+
+debouncedSearchTextData(1, dropdownSelectedColumn, ""); // Call debounced function
+
+//handleSearchText(1, dropdownSelectedColumn, "");
+
+)else(
+
+// handleSearchText(1, dropdownSelectedColumn, searchValueText);
+
+debouncedSearchTextData(1, dropdownSelectedColum, search/alueText); // Call debounced function
+
+735
+
+736
+
+};
+
+737
+
+I const handleSearchText async (newPage, column, searchtext) {
+
+738
+
+739
+
+setValueSearchText(searchtext);
+
+748
+
+setSelectedSearchColumn (colum);
+
+741
+
+// if (searchtext") (
+
+742
+
+// setPdata(searchpdata);
+
+743
+
+//setAccessGranted(true);
+
+
+
+/} else (
+
+setFile_modal Loader(true);
+
+const urlForapi $(apiBaseurl)api/ReportModules/GetDataFromTableAfterFilter";
+
+const filesResponse await axios.post(urlForApi,
+
+filename: fileNameTosend,
+
+foldername: folderName,
+
+checkedColumnName: checkedColumns.length > 0 ? checkedColumns: [*],
+
+filterColumnName: column,
+
+757
+
+pagesize: pageSize,
+
+758
+
+pagenumber: newPage,
+
+759
+
+startDate: startDateTable,
+
+760
+
+endDate: endDateTable
+
+761
+
+}, {
+
+762
+
+withCredentials: true,
+
+763
+
+});
+
+764
+
+765
+
+766
+
+if (filesResponse.data "You dodt have access to this data") {
+
+767
+
+setAccessGranted(false);
+
+768
+
+setFile_modal_Loader(false);
+
+769
+
+} else if (filesResponse.data "No Data Found" || filesResponse.data.totalCount 0) {
+
+779
+
+771
+
+setNoData(true);
+
+772
+
+setAccessGranted(false);
+
+TB
+
+setFile andal tnadeelfalse):
+
+
+} else {
+
+}
+
+let pro filesResponse.data.data;
+
+setPdata(pro);
+
+// setSearchPdata(pro);
+
+> setFile modal Loader As
+
+7 of 21
+
+setlumRows(filesResponse.data.totalCount);
+
+setAccessGranted(true);
+
+//setPagefilter(newpage);
+
+setPage(newPage);
+
+setFile_modal_Loader(false);
+
+} catch (error) {
+
+if (error.response && (error.response.status 484 || error.response.status500)) (
+
+setloData(true)
+
+}
+
+setAccessGranted(false);
+
+setloDataError(true);
+
+console.error("Error fetching filter dats..:", error);
+
+794
+
+795
+
+796
+
+797
+
+798
+
+799
+
+500
+
+521
+
+602
+
+setFile_modal_Loader(false);
+
+I
+
+const handleChangedropdown (value, label) -> (
+
+
+setSelectedItems(1) const handleChangedropdown (value, label)-> ( setSelectedItems(label); }; setDropdownSelectedColumn (label.value)
+
+src> Components >
+
+HomeComponents >
+
+FileView >
+
+FileModal > 15
+
+FileModal js > Set
+
+FileModal
+
+const FileModal (props) => {
+
+perfomFileDownload
+
+> setFile modal Loader Aa
+
+Tof21
+
+↑↓
+
+884
+
+605
+
+806
+
+807
+
+808
+
+809
+
+810
+
+811
+
+812
+
+813
+
+814
+
+815
+
+816
+
+817
+
+818
+
+819
+
+//fetch max bussiness date
+
+const fetchMaxdate async () => {
+
+try {
+
+const sortedDataResponse await axlos.get('$(apiBaseuri)api/ReportModules/maxBusinessDate/$ (filellameTosend)/$(folderllame}, { withCredentials: true, });
+
+// const NewDate moment (sortedDataResponse.data, 'DD-MM-YYYY')
+
+setDatefromFile(sortedDataResponse.data.substring(0, 18)) setStartDate(sortedDataResponse.data.substring(0, 10)); setEndDate(sortedDataResponse.data.substring(0, 10)); console.error("Error fetching sorted data:", error);
+
+catch (error) {
+
+820
+
+}
+
+821
+
+822
+
+823
+
+let filterOption (input, option) ->
+
+(option?.label ??").toLowerCase().includes (Input.toLowerCase());
+
+824
+
+825
+
+826
+
+let filteroptions (input, option) ->
+
+827
+
+(option?.label ??").toLowerCase().includes (Input.toLowerCase());
+
+828
+
+829
+
+//fetch all access column name
+
+830
+
+const fetchColumns async() {
+
+
+try {
+
+2
+
+const response - await fetch( (filellameTosend)&foldername=$(folderliane) $(apiBasauri)api/ReportModules/GetFieldliamesAccordingToUser?username=$(userId)&filename-$ );
+
+3
+
+4
+
+5
+
+6
+
+const data avait response.json(); setColumns(data); const convertedArray data.map(item-> (( value: item, label: item, }));
+
+57
+
+33
+
+39
+
+41
+
+42
+
+43
+
+44
+
+45
+
+46
+
+setColumnOPTIONS(convertedArray) setCheckedColumns(data)
+
+} catch (error) { console.error('Error fetching column names:', error);
+
+847
+
+348
+
+};
+
+349
+
+50
+
+const handleCheckboxChange (event) -> {
+
+851
+
+const { value, checked) console.log("val"); event.target;
+
+852
+
+853
+
+854
+
+if (value 'selectAll') { setCheckedColumns(columns); } else {
+
+855
+
+856
+
+857
+
+858
+
+if (checked) (
+
+// setCheckedColumnOption(columns)
+
+
+} else {
+
+}
+
+setCheckedColumns([]);
+
+// setCheckedColumnOption([])
+
+} else (
+
+if (checked) (
+
+#loginform.cas
+
+Logancaft jo
+
+FileModals>FileModal
+
+performFileDownload
+
+> setFile modal Loader
+
+Tol21
+
+setCheckedColumns ((prevState)-> [...prevState, value));
+
+// setCheckedColumnOption((prevState) [...prevState, value));
+
+} else {
+
+setCheckedColumns((prevState) -> prevState.filter((column) column 1 value));
+
+// setCheckedColumnOption((prevState) prevState.filter((column)-> column 1- value));
+
+// Filter columns based on search ters
+
+searchTerm const filteredColumns
+
+?columns.filter(column ->
+
+869
+
+}
+
+870
+
+671
+
+872
+
+873
+
+874
+
+875
+
+876
+
+877
+
+878
+
+) : columns;
+
+879
+
+821
+
+882
+
+863
+
+834
+
+845
+
+column.toLowerCase().includes (searchTerm.toLowerCase())
+
+I
+
+const fetchByColumnltane async (e, nenPage){
+
+setFile_nodal_Loader(true);
+
+if (valuesearchText.trim())
+
+handleSearchText(newPage, selectedSearchColumn, valueSearchText)
+
+//handleSearchText(nesPage, selectedSearchColumn, valuesearchText)
+
+
+} else {
+
+try {
+
+setFile modalice
+
+const getContentInFilesAplur) $(apiBasturl)api/Reportmodules/GetDataFromTablelyColumns
+
+const urlForApi getContent InFilesApturl;
+
+const filesResponse await axios.post(urlForapi, {
+
+username: userId,
+
+filename: e,
+
+foldername: folderttame,
+
+checkedColumns: checkedColumns,
+
+pagesize: pageSize,
+
+pagenumber: newPage,
+
+).(
+
+90
+
+if (filesResponse.data "You dont have access to this data") (
+
+907
+
+setAccessGranted(false);
+
+setFile_modal_Loader(false);
+
+909
+
+}
+
+I
+
+919
+
+else if (filesResponse.data
+
+"No Data Found" || filesResponse.data.totalCount) (
+
+911
+
+912
+
+913
+
+914
+
+915
+
+916
+
+setNoData(true);
+
+setAccessGranted(false);
+
+setFile_modal_Loader(false);
+
+} else {
+
+Let nen
+
+Fileslesna.data.data:
+
+
+setPdata(pro);
+
+setSearchPdata(pro);
+
+>setfile modal Loader
+
+AT21
+
+setlusłows(filesResponse.data.totalCount):
+
+setAccessüranted(true);
+
+setPage(newPage);
+
+setFile_modal_Loader(false);
+
+9
+
+924
+
+istis
+
+} catch (error) (
+
+925
+
+if (error.response.status 404 || error.response.status 500) (
+
+odal
+
+926
+
+File
+
+927
+
+setNoData(true)
+
+Select.js
+
+928
+
+setAccessGranted(false);
+
+ckboxComponent.js
+
+929
+
+setNoDataError(true);
+
+930
+
+Modal.css
+
+931
+
+Modaljs
+
+932
+
+Tablejs
+
+933
+
+adDownload
+
+934
+
+console.error("Error fetching files in the folder:", error);
+
+setFile_modal_Loader(false);
+
+wnload
+
+935
+
+936
+
+mad
+
+937
+
+};
+
+ForBoundary
+
+938
+
+enter.js
+
+939
+
+I
+
+meckerTableFile.js
+
+948
+
+return (
+
+munkedUploader.js
+
+941
+
+wunloadDestination.js
+
+942
+
+<Modal centered
+
+943
+
+ainUpload.css
+
+964
+
+open-modalopen)
+
+footer(null)
+
+
+title-(null)
+
+width-("1200px"}
+
+> setFile modal Loader
+
+7 of 21
+
+closeIcon-(fullDataToDownloadloader? false: true)
+
+maskClosable (false)
+
+onCancel (() => { setModalopen(false); }}
+
+<ToastContainer />
+
+{/* starting from here */}
+
+<div className-"modalContent">
+
+<div className- modalContentsModule'>
+
+<div style={{ display: "flex", paddingBottom: "20px" }}>
+
+<div
+
+style-{{
+
+display: "flex",
+
+JustifyContent: "left",
+
+alignItems: "center",
+
+marginBottom: "4px",
+
+width: "1150px",
+
+marginLeft: "11px",
+
+> I
+
+(/* check */)
+
+<div className="nodalViewComponent">
+
+<FormControl sx-minilidth: 200 )) size-"small">
+
+<InputLabel style({ height: "32px", paddingRight: "10px", paddingBottom: 10px",
+
+fontSize: "12px"}}>{filellameTosend)</InputLabel>
+
+<AntSelect
+
+label (fileNameTosend)
+
+open-(150pen)
+
+onopen (handleToggle)
+
+onfloce handlatneelel
+
+
+
+onClose [handleToggle)
+
+MenuProps-{{
+
+PaperProps: (
+
+style: {
+
+width: 200,
+
+},
+
+> setFile modal_Loader Aa
+
+7 of 21
+
+}}
+
+style({height: 32 }}
+
+<TextField
+
+placeholder- Select Column Nane
+
+fullwidth
+
+InputProps-((
+
+}}
+
+style: (
+
+},
+
+height: 25,
+
+onClick-((e) -> e.stopPropagation()}
+
+onChange-((e) -> setSearchTerm(e.target.value)}
+
+I value (searchTera)
+
+/> <Menuïten className"fileflodal Checkbox" onClick-((e) > e.stopPropagation()}>
+
+<div onClick((e)-> e.stopPropagation())>
+
+<CheckboxComponent
+
+columns-(filteredColumns)
+
+checkedColumns (checkedColumns)
+
+handleCheckboxChange (handleCheckboxChange)
+
+onClick-(handleCheckboxClick)
+
+
+</div>
+
+LoginLeft/sx
+
+> setFile modal Loader Aa
+
+1 of 21
+
+32
+
+1003
+
+1004
+
+1005
+
+1006
+
+1007
+
+1000
+
+1809
+
+1010
+
+1011
+
+1812
+
+1013
+
+1014
+
+1015
+
+1016
+
+1017
+
+1018
+
+1019
+
+1020
+
+1021
+
+1022
+
+1023
+
+1024
+
+1025
+
+1026
+
+1027
+
+1828
+
+1029
+
+1830
+
+1031
+
+1832
+
+*
+
+</MenuItem>
+
+</AntSelect>
+
+</FormControl>
+
+<ForeControl sx-((minwidth: 150, height: 32)) size-"small">
+
+<Select
+
+style-({
+
+width: 150,
+
+height: 32,
+
+fontSize: 12px',
+
+borderRadius: "0.4rem",
+
+borderBottomRightRadius: "Oren",
+
+borderTopRightRadius: "eres",
+
+mode-single'
+
+showSearch
+
+placeholder="Click to Select Column"
+
+>
+
+onChange- handleChangedropdown)
+
+filterOption (filterOption)
+
+options (columnOPTIONS)
+
+</ForeControl>
+
+/* search bar when data is shown in home/folder/file/
+
+<ForeControl sx-((minskidth: 150, height: 32)
+
+size-"small">
+
+<Input
+
+width-(150)
+
+height (32)
+
+
+props)-> (
+
+1933
+
+1034
+
+1035
+
+1036
+
+1037
+
+1038
+
+1039
+
+1048
+
+1041
+
+1042
+
+1043
+
+1044
+
+1045
+
+1046
+
+1047
+
+1848
+
+1049
+
+1050
+
+1051
+
+1052
+
+1053
+
+1054
+
+1955
+
+1056
+
+1057
+
+1058
+
+1859
+
+1060
+
+1061
+
+> setFile modal Loader Aa
+
+121
+
+borderRadius: "0.4ren",
+
+}}
+
+placeholder "Enter text to search"
+
+//value (searchTextForFilter)
+
+onChange-(handleAllTextSearch)
+
+</FormControl>
+
+<ForeControl sx-[(mimidth: 150, height: 32}) size="small">
+
+<RangePicker
+
+classhame-"bg-transparent"
+
+onChange (handleDateChange)
+
+disabledDate-((current) disableDate(current))
+
+/>
+
+</FormControl>
+
+</div>
+
+<div>
+
+<p className-"titleReport_date">
+
+Refresh on: (datefronfile)
+
+</p>
+
+<p className-'titleReport_date">Count: (numilous}</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div classHane-headerContent'>
+
+</div>
+
+(file_podal_Loader?
+
+I
+
+<div style-{{ display: "flex", justifyContent: "center", aligSelf: "center",
+
+flexDirection: "column", gap: "18" }}>
+
+
+
+<ThreeDots
+
+height="200"
+
+width="150"
+
+radius-"9"
+
+1065
+
+1066
+
+1067
+
+1068
+
+1069
+
+1070
+
+1071
+
+1072
+
+1073
+
+1074
+
+1875
+
+1076
+
+1877
+
+1078
+
+1079
+
+1030
+
+):(
+
+1081
+
+1092
+
+1083
+
+1884
+
+1885
+
+</div>
+
+1086
+
+1087
+
+1038
+
+{/* Ending Here */}
+
+</div> <div classhane-tableContent"> (accessGranted ? ( <Tablefile data-(pdata) searchTextValue-(valueSearchText) SearchTextData (handleSearchText) searchColumn-[selectedSearchColumn)
+
+endDateTable-(endlateTable) />
+
+<div classliane-'accessDenledtessage'>
+
+(nobata true ? <p classilane-'titleleport' >{noDataError NO Data Found...":
+
+Hum...something seems to have gone wrong."}</p>
+
+<p className'titleReport You don't have access to this data.
+
+}
+
+</div>]
+
+<div classlane-paginationibutton">
+
+
+
+<div style-({ display: "flex", gap: "Ivw", width: "70%"}}
+
+numkows> &(
+
+<div classlane-paginationlibuttonModal">
+
+<div style-({ display: "flex", gap: "1vw", width: "100%" }}>
+
+<div style=((display: "flex", alignitems: "center" }}>
+
+<div style-({marginLeft: "1vw" }}> Rows per Page: (pageSize)</div>
+
+<div>
+
+<Stack spacing-(1)>
+
+<Pagination count (Math.ceil(numRows / pagesize)} page-(page) onChange-
+
+(handleChange) />
+
+</Stack>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+(userDownload 18
+
+<div className"btnSec">
+
+(fullDataToDownloadloader?
+
+<div style=((width: "100%", ]]>
+
+<div style=((display: "flex", gap: "15px"}}>
+
+<p>Downloading..</p>
+
+<Box sx-width: 35%, height: "25px", position: relative", lignSelf:
+
+"center", paddingTop: "5px"}}>
+
+<Linear Progress
+
+</Box>
+
+<div style={{ paddingTop: "Spx"}}>
+
+<ToldClose fill-'red' size-(15) onClick(cancelDownload} />
+
+
+Button
+
+id="download-button"
+
+aria-controls-(anchorEl ? 'download-menu: undefined}
+
+aria-haspopup-"true"
+
+aria-expanded-(anchorEl ? 'true': undefined)
+
+onClick-(handleClick)
+
+variant-contained"
+
+endIcon-[<ArrowDropDownIcon/>}
+
+style-({ color: 'black', backgroundColor: '#e5e5ea' }}
+
+Download
+
+</Button>
+
+<Menu
+
+id="download-menu"
+
+anchorEl-(anchorEl}
+
+open-Boolean(anchorE1)}
+
+onClose (handleClose)
+
+MenuListProps-{{
+
+>
+
+I
+
+'aria-labelledby': 'download-button',
+
+<MenuIten onClick={(event) -> handleSubMenuClick(event, 'currentPage")}>
+
+Current Page Download
+
+</MenuItem>
+
+<Menu
+Id-"current-page-menu"
+
+Searos
+
+*
+
+anchorEl-(subMenuAnchorE1]
+
+open-(currentSubMenu 'currentPage && Boolean (sublenuAnchor El)} onClose(handleClose)
+
+MenuListProps-{{
+
+}} "aria-labelledby': 'current-page-menu',
+
+<MenuItem onClick-((event) -> (event.preventDefault(); handleFileDownload (Ccsv')]] CSVC/HenuItem> <Manulten onClick((event) -> (event.preventDefault(); handleFileDownload ('Cxlsx))) XLSX</NenuItem>
+
+<MenuItem onClick-(handleSubMenuClick2}>TEXT</MenuItem>
+
+<Menu
+
+id="text-menu"
+
+anchorEl-(subMenuAnchorE12)
+
+open-(Boolean(subMenuAnchorE12)}
+
+onClose (handleClose)
+
+MenuListProps-{{
+
+}}
+
+'arla-labelledby': 'text-menu
+
+<Menuïtem onClick-((event) -> (event.preventDefault(); handleFileDownload
+
+('Chtxt')}}>With Header</MenuItem> <MenuItem onClick=[(event) -> (event.preventDefault(); handleFileDownload
+
+('Ctxt')}}>Mithout Header</MenuItem>
+
+</Menu>
+
+</Menu>
+
+<Menultem onClick((event) -> handleSubMenuClick(event, 'fullFile')}>
+
+{searchTextForFilter --''? 'Filter Full Data Download': 'Full File
+
+Download')
+
+</MenuItem>
+
+<Menu
+
+id="full-file-menu"
+
+anchorEl-(subMenuAnchorEl)
+
+open-{currentSubMenu 'fullFile' && Boolean (subMenuAnchorEl)} }} I
+
+onClose(handleClose)
+
+MenuListProps={{
+
+'aria-labelledby': 'full-file-menu',
+
+<MenuItem onClick={((event) -> (event.preventDefault(); handleFileDownload
+
+('Fcsv')}}>CSV</MenuItem>
+
+<MenuItem onClick={(event) -> (event.preventDefault(); handleFileDownload
+
+('Fxlsx')}}>XLSX</MenuItem>
+
+<MenuItem onClick-(handleSubMenuClick2)>TEXT</MenuItem>
+
+<Menu
+
+id="text-menu"
+
+anchorEl-[subMenuAnchorE12)
+
+open-[Boolean (subMenuAnchorE12)}
+
+onClose(handleClose)
+
+MenuListProps-{{
+
+}}
+
+'aria-labelledby': 'text-menu",
+
+<MenuItem onClick=((event) -> (event.preventDefault(); handleFileDownload
+
+(x) with Header MenuItem
+
+MenuItem onClick((event) > (event.preventDefault(); handleFileDownload
+
+("Fhtxt'))) without Header Menuitem
+
+Menu
+
+Menu
+
+<<Menu
+
+Modal
+
+>
+
+centered
+
+open (showConsentFors)
+
+footer-(null)
+
+title-(null}
+
+width-("auto"}
+
+closeIcon-(!fullDataToDownloadloader}
+
+maskClosable (false)
+
+onCancel (handleConsentFormClose}
+
+<div classflame-consent-form'>
+
+<h3>Terms and Conditions</h3>
+
+<p style-{{ color: 'red' }}>
+
+1. It is the responsibility of the concerned Business Users to validate the downloaded data. <br />
+
+2. The data located in the specified folder is restricted exclusively to the team members associated with given permission. <br />
+
+3. Any data dounloaded from the specified folder will result in a transfer of ownership to the downloading team. <br />
+
+4. Users need to make sure to download within given timelines. <br />
+
+5. Any SR raised for data sets, service timeline is 7 working days.</p>
+
+<div>
+
+Input
+
+type-checkbox'
+
+1d-agree
+
+checked (isChecked)
+
+onChange (handleConsentboxChange)
+
+>&nbsp;
+
+<label htmlFor-agree I Agree label
+
+</div><br />
+
+{isChecked && fileDownloadRequest.startsWith("F") &&
+
+<div>
+
+Rows Per Sheet:
+
+<Row>
+
+<Col span-(12)>
+
+<Slider
+
+/>
+
+min-(1)
+
+max-{numRows)
+
+onChange={onChange)
+
+value(typeof inputValue 'number? inputValue: 0)
+
+</Col>
+
+<Col span={4}>
+
+<InputNumber
+
+min-(1)
+
+max-(numRows]
+
+style-{{ margin: '8 16px' }}
+
+value-(inputValue]
+
+onChange (onChange]
+
+
+Col
+
+Row
+
+div }
+
+Button
+
+variant="outlined"
+
+onClick-(handleConsentFormSubmit)
+
+disabled (lisChecked || isSubmitting)
+
+style-((width: '75px' }}
+
+{isSubmitting? "Submitting...": "OK"}
+
+</Button>&nbsp;&nbsp;
+
+<Button
+
+variant-"outlined"
+
+onClick-(handleConsentFormClose}
+
+disabled={isSubmitting)
+
+style={{ width: '75px' }}
+
+Close
+
+</Button>
+
+</div>
+
+</Modal>
+
+</>}
+
+</div>
+
+1
+
+2
+
+}
+
+</div>
+
+
+Close
+
+</Button>
+
+</div>
+
+2293
+
+1266
+
+1267
+
+1268
+
+</Modal>
+
+1269
+
+4278
+
+1271
+
+1272
+
+1273
+
+</>}
+
+</div>
+
+</div>
+
+</div>
+
+1274
+
+</div>
+
+1275
+
+</Modal>
+
+1276
+
+</>
+
+1277
+
+)
+
+1278 }
+
+1279
+
+1288
+
+export default FileModal
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////
+
+
+import { Col, InputNumber, Modal, Row, Slider, Select, Input, DatePicker } from 'antd';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import './FileModal.css';
+import axios from 'axios';
+import TableFile from './Tablefile/Tablefile';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import * as XLSX from 'xlsx';
+import Papa from 'papaparse';
+import StateContext from '../../../context/StateContext';
+import Dropdown from 'rsuite/Dropdown';
+import 'rsuite/dist/rsuite.min.css';
+import { ThreeDots } from 'react-loader-spinner';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import { ToastContainer, toast } from 'react-toastify';
+import { IoMdClose } from 'react-icons/io';
+import { FormControl, InputLabel, MenuItem, Button } from '@mui/material';
+import CheckboxComponent from './CheckboxComponent';
+import { isAfter, startOfDay, subDays } from 'date-fns';
+import TextField from '@mui/material/TextField';
+import moment from 'moment';
+
+const { RangePicker } = DatePicker;
+
+const FileModal = (props) => {
+    const { modalOpen, setModalOpen } = props;
+    const { fileNameToSend, apiBaseUrl, setLogoutTimers, folderName, userSubResult, checkedColumns } = useContext(StateContext);
+
+    const [pdata, setPdata] = useState([]);
+    const [searchPdata, setSearchPdata] = useState([]);
+    const [checkedColumnOption, setCheckedColumnOption] = useState([]);
+    const [fullDataToDownloadLoader, setFullDataToDownloadLoader] = useState(false);
+    const [page, setPage] = useState(1);
+    const [pageFilter, setPageFilter] = useState(1);
+    const [numRows, setNumRows] = useState(1);
+    const [accessGranted, setAccessGranted] = useState(true);
+    const [fileModalLoader, setFileModalLoader] = useState(false);
+    const [sortColumn, setSortColumn] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
+    const [noData, setNoData] = useState(false);
+    const [noDataError, setNoDataError] = useState(false);
+    const [dateFromFile, setDateFromFile] = useState(null);
+    const [maxRowsPerSheet, setMaxRowsPerSheet] = useState(700000);
+    const userId = sessionStorage.getItem('userId');
+    const [cancelTokenSource, setCancelTokenSource] = useState(null);
+    const [startDateTable, setStartDate] = useState(null);
+    const [endDateTable, setEndDate] = useState(null);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [pageWithDate, setPageWithDate] = useState(false);
+    const [OPTIONS, setOPTIONS] = useState([]);
+    const [columnOPTIONS, setColumnOPTIONS] = useState([]);
+    const [searchTextForFilter, setSearchTextForFilter] = useState('');
+    const [dropdownSelectedColumn, setDropdownSelectedColumn] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showConsentForm, setShowConsentForm] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [fileDownloadRequest, setFileDownloadRequest] = useState(null);
+    const [downloadFileName, setDownloadFileName] = useState('');
+    const [columns, setColumns] = useState([]);
+    const [dropdownSelectedColumnsFormCheckBox, setDropdownSelectedColumnsFormCheckBox] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
+    const [currentSubMenu, setCurrentSubMenu] = useState('');
+    const [inputValue, setInputValue] = useState(700000);
+    const [valueSearchText, setValueSearchText] = useState('');
+    const [selectedSearchColumn, setSelectedSearchColumn] = useState('');
+    const userRole = sessionStorage.getItem('userRole') || '';
+    const token = sessionStorage.getItem('token');
+    const pageSize = 100;
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSubMenuAnchorEl(null);
+        setCurrentSubMenu('');
+    };
+
+    const handleSubMenuClick = (event, subMenu) => {
+        setCurrentSubMenu(subMenu);
+        setSubMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleToggle = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const disableDate = (current) => {
+        if (userRole === 'User') {
+            if (dateFromFile) {
+                const minDate = moment(dateFromFile).clone().subtract(3, 'days');
+                return current.isAfter(dateFromFile, 'day') || current.isBefore(minDate, 'day');
+            }
+        } else {
+            return current.isAfter(dateFromFile, 'day');
+        }
+        return false;
+    };
+
+    const handleDateChange = (dates) => {
+        if (dates && dates.length === 2) {
+            const [sdate, edate] = dates;
+            setStartDate(sdate.toISOString().split('T')[0]);
+            setEndDate(edate.toISOString().split('T')[0]);
+            fetchContentInFilesWithDate(fileNameToSend, page, sdate.toISOString().split('T')[0], edate.toISOString().split('T')[0]);
+        } else {
+            setStartDate(null);
+            setEndDate(null);
+            setPageWithDate(false);
+        }
+    };
+
+    const fetchContentInFilesWithDate = async (fileName, newPage, start, end) => {
+        setFileModalLoader(true);
+        try {
+            const response = await axios.post(`${apiBaseUrl}/api/ReportModules/getModalDataWithDate`, {
+                username: userId,
+                filename: fileName,
+                foldername: folderName,
+                checkedColumnName: checkedColumns.length > 0 ? checkedColumns : ['*'],
+                pageSize,
+                pageNumber: newPage,
+                startDate: start,
+                endDate: end
+            }, { withCredentials: true });
+
+            if (response.data === 'No Data Found' || response.data.totalCount === 0) {
+                setNoData(true);
+                setAccessGranted(false);
+            } else {
+                setPdata(response.data.data);
+                setSearchPdata(response.data.data);
+                setNumRows(response.data.totalCount);
+                setAccessGranted(true);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        setFileModalLoader(false);
+    };
+};
+
+
+
+
+try {
+    const filesResponse = await axios.post(fullData, {
+        "checkedColumns": checkedColumns.length > 0 ? checkedColumns : [""],
+        "endDate": endDateTable,
+        "fileFormat": fileTypes,
+        "filename": filename,
+        "foldername": folderName,
+        "maxRowsPerSheet": maxRowsPerSheet,
+        "startDate": startDateTable,
+        "username": userId
+    }, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        withCredentials: true,
+        responseType: 'blob',
+        cancelToken: source.token
+    });
+
+    if (filesResponse.status === 200) {
+        const blob = new Blob([filesResponse.data], { type: filesResponse.headers['content-type'] });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.setAttribute('download', `${downloadFileName}.zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        setLogoutTimers(5);
+        setFullDataToDownloadLoader(false);
+        toast.success("Download successfully...", { theme: "colored" });
+
+    } else {
+        setFullDataToDownloadLoader(false);
+        setLogoutTimers(5);
+        toast.error("Something went wrong...", { theme: "colored" });
+    }
+} catch (error) {
+    console.error("Error:", error);
+
+    if (axios.isCancel(error)) {
+        setLogoutTimers(5);
+        setFullDataToDownloadLoader(false);
+    } else {
+        console.error("Error fetching files in the folder:", error);
+        toast.error("Something went wrong...", { theme: "colored" });
+        setLogoutTimers(5);
+        setFullDataToDownloadLoader(false);
+    }
+} finally {
+    sessionStorage.setItem("process", false);
+}
+
+const cleanupAfterCancel = () => {
+    setCancelTokenSource(null);
+    setFullDataToDownloadLoader(false);
+};
+
+const cancelDownload = () => {
+    if (cancelTokenSource) {
+        cancelTokenSource.cancel('Download canceled');
+        sessionStorage.setItem("process", false);
+        cleanupAfterCancel();
+    }
+};
+
+const handleConsentboxChange = (e) => {
+    setIsChecked(e.target.checked);
+};
+
+const handleConsentFormClose = () => {
+    setShowConsentForm(false);
+    setFileDownloadRequest(null);
+    setIsChecked(false);
+};
+
+const consentUpdate = async () => {
+    const consentDetails = {
+        "Username": userId,
+        "Folder": folderName,
+        "File": fileNameToSend,
+        "Type": fileDownloadRequest
+    };
+
+    try {
+        const apiToFetch = `${apiBaseUrl}api/UsersLogs/InsertConsentDetails`;
+        const response = await axios.post(apiToFetch, consentDetails, {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" }
+        });
+
+        if (response.status !== 200) {
+            console.error("API ERROR", response);
+        }
+    } catch (error) {
+        console.error("The API error is", error);
+    }
+};
+
+const handleConsentFormSubmit = async () => {
+    if (fileDownloadRequest) {
+        await consentUpdate();
+        await performFileDownload(fileDownloadRequest);
+        handleConsentFormClose();
+    }
+};
+
+const handleFileDownload = (type) => {
+    handleClose();
+    setFileDownloadRequest(type);
+    setShowConsentForm(true);
+
+    if (startDateTable && endDateTable) {
+        setDownloadFileName(fileNameToSend + '(' + startDateTable.toString() + '+' + endDateTable.toString() + ')');
+    } else {
+        setDownloadFileName(fileNameToSend + '(datefromfile.toString())');
+    }
+};
+
+const performFileDownload = async (e) => {
+    userLogs();
+    sessionStorage.setItem("process", true);
+    setFullDataToDownloadLoader(true);
+
+    if (e === 'Chtxt') {
+        const tabSeparatedContent = convertToText(pdata);
+        const blob = new Blob([tabSeparatedContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = `${downloadFileName}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    } else if (e === 'Ctxt') {
+        const tabSeparatedContent = convertToTextWithoutHeader(pdata);
+        const blob = new Blob([tabSeparatedContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = `${downloadFileName}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+};
+
+const convertToText = (data) => {
+    if (!data || data.length === 0) return "";
+
+    const columns = Object.keys(data[0]);
+    const colWidths = columns.map(col => Math.max(col.length, ...data.map(row => (row[col] ? row[col].toString().length : 0))));
+    
+    const header = columns.map((col, i) => col.padEnd(colWidths[i])).join('\t');
+    const separator = colWidths.map(width => '-'.repeat(width)).join('\t');
+    const rows = data.map(row =>
+        columns.map((col, i) => (row[col] ? row[col].toString().padEnd(colWidths[i]) : '-'.repeat(colWidths[i]))).join('\t')
+    );
+
+    return [header, separator, ...rows].join('\n');
+};
+
+const convertToTextWithoutHeader = (data) => {
+    if (!data || data.length === 0) return "";
+
+    const columns = Object.keys(data[0]);
+    const colWidths = columns.map(col => Math.max(col.length, ...data.map(row => (row[col] ? row[col].toString().length : 0))));
+    
+    const separator = colWidths.map(width => '-'.repeat(width)).join('\t');
+    const rows = data.map(row =>
+        columns.map((col, i) => (row[col] ? row[col].toString().padEnd(colWidths[i]) : '-'.repeat(colWidths[i]))).join('\t')
+    );
+
+    return [separator, ...rows].join('\n');
+};
+
+const sendMail = async () => {
+    const mailDataToSend = {
+        "to": [userId],
+        "subject": `${userId} Downloaded ${fileNameToSend} File`,
+        "body": `<html><body><p>Dear User,</p><p>This is to confirm that ${userId} has downloaded the file ${fileNameToSend} from our system.</p><p>Thank you for using our services.</p><p>Sincerely,</p><p>The ICICIHFC</p></body></html>`
+    };
+
+    try {
+        const apiToFetch = `${apiBaseUrl}api/Email/SendEmail`;
+        await axios.post(apiToFetch, mailDataToSend, {
+            withCredentials: true,
+            headers: { "Content-Type": "application/json" }
+        });
+    } catch (error) {
+        console.error("Error sending email:", error);
+    }
+};
+
+
+
+
+
+/////////////////////////////Paert 1
+
+import React from "react";
+import { Modal, ToastContainer } from "antd";
+import Filters from "./Filters";
+import DataTable from "./DataTable";
+import DownloadSection from "./DownloadSection";
+
+const FileModal = ({ modalopen, setModalopen, file_modal_Loader, accessGranted, noData, noDataError, pdata, valueSearchText, selectedSearchColumn, numRows, pageSize, page, handleChange, userDownload, fullDataToDownloadloader, cancelDownload, handleFileDownload, showConsentForm, handleConsentFormClose, handleConsentFormSubmit, isChecked, handleConsentboxChange, isSubmitting, inputValue, onChange, numRows }) => {
+  return (
+    <Modal
+      centered
+      open={modalopen}
+      footer={null}
+      title={null}
+      width={"1200px"}
+      closeIcon={!fullDataToDownloadloader}
+      maskClosable={false}
+      onCancel={() => setModalopen(false)}
+    >
+      <ToastContainer />
+
+      <div className="modalContent">
+        <Filters />
+
+        {file_modal_Loader ? (
+          <div className="loadingContainer">
+            <p>Please wait, data is loading...</p>
+          </div>
+        ) : (
+          <DataTable
+            accessGranted={accessGranted}
+            noData={noData}
+            noDataError={noDataError}
+            pdata={pdata}
+            valueSearchText={valueSearchText}
+            selectedSearchColumn={selectedSearchColumn}
+          />
+        )}
+
+        <DownloadSection
+          numRows={numRows}
+          pageSize={pageSize}
+          page={page}
+          handleChange={handleChange}
+          userDownload={userDownload}
+          fullDataToDownloadloader={fullDataToDownloadloader}
+          cancelDownload={cancelDownload}
+          handleFileDownload={handleFileDownload}
+          showConsentForm={showConsentForm}
+          handleConsentFormClose={handleConsentFormClose}
+          handleConsentFormSubmit={handleConsentFormSubmit}
+          isChecked={isChecked}
+          handleConsentboxChange={handleConsentboxChange}
+          isSubmitting={isSubmitting}
+          inputValue={inputValue}
+          onChange={onChange}
+        />
+      </div>
+    </Modal>
+  );
+};
+
+export default FileModal;
+
+
+
+
+/////////////////////////////////////Part 2
+
+import React from "react";
+import { FormControl, InputLabel, Select, MenuItem, Input } from "@mui/material";
+import { RangePicker } from "antd";
+
+const Filters = ({ handleChangedropdown, handleAllTextSearch, handleDateChange, filterOption, columnOPTIONS }) => {
+  return (
+    <div className="filtersContainer">
+      <FormControl size="small">
+        <InputLabel>Column</InputLabel>
+        <Select onChange={handleChangedropdown} filterOption={filterOption} options={columnOPTIONS} />
+      </FormControl>
+
+      <FormControl size="small">
+        <Input placeholder="Enter text to search" onChange={handleAllTextSearch} />
+      </FormControl>
+
+      <FormControl size="small">
+        <RangePicker onChange={handleDateChange} />
+      </FormControl>
+    </div>
+  );
+};
+
+export default Filters;
+
+
+
+
+
+
+
+
+/////////////////////////////////////// Part 3
+
+
+import React from "react";
+import Tablefile from "./Tablefile";
+
+const DataTable = ({ accessGranted, noData, noDataError, pdata, valueSearchText, selectedSearchColumn }) => {
+  return (
+    <div className="tableContent">
+      {accessGranted ? (
+        <Tablefile data={pdata} searchTextValue={valueSearchText} searchColumn={selectedSearchColumn} />
+      ) : (
+        <div className="accessDeniedMessage">
+          {noData ? <p>{noDataError ? "No Data Found..." : "Hmm...something went wrong."}</p> : <p>You don't have access to this data.</p>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DataTable;
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////// part 4
+
+import React from "react";
+import { Button, Slider, InputNumber, Modal, Menu, MenuItem, Box } from "@mui/material";
+import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
+
+const DownloadSection = ({
+  numRows,
+  pageSize,
+  page,
+  handleChange,
+  userDownload,
+  fullDataToDownloadloader,
+  cancelDownload,
+  handleFileDownload,
+  showConsentForm,
+  handleConsentFormClose,
+  handleConsentFormSubmit,
+  isChecked,
+  handleConsentboxChange,
+  isSubmitting,
+  inputValue,
+  onChange,
+}) => {
+  return (
+    <div className="downloadSection">
+      {numRows > 0 && (
+        <div className="pagination">
+          <p>Rows per Page: {pageSize}</p>
+        </div>
+      )}
+
+      {userDownload === "1" && (
+        <div className="btnSec">
+          {fullDataToDownloadloader ? (
+            <div>
+              <p>Downloading...</p>
+              <Box sx={{ width: "35%", height: "25px" }}>
+                <LinearProgress />
+              </Box>
+              <button onClick={cancelDownload}>Cancel</button>
+            </div>
+          ) : (
+            <Button variant="contained" endIcon={<ArrowDropDownIcon />}>
+              Download
+            </Button>
+          )}
+
+          <Modal open={showConsentForm} onClose={handleConsentFormClose}>
+            <div className="consent-form">
+              <h3>Terms and Conditions</h3>
+              <p>
+                1. Validate downloaded data.
+                <br />
+                2. Only authorized users can access.
+                <br />
+                3. Data ownership transfers upon download.
+                <br />
+              </p>
+              <input type="checkbox" checked={isChecked} onChange={handleConsentboxChange} /> I Agree
+              {isChecked && (
+                <div>
+                  Rows Per Sheet:
+                  <Slider min={1} max={numRows} onChange={onChange} value={inputValue} />
+                  <InputNumber min={1} max={numRows} value={inputValue} onChange={onChange} />
+                </div>
+              )}
+              <Button onClick={handleConsentFormSubmit} disabled={!isChecked || isSubmitting}>
+                {isSubmitting ? "Submitting..." : "OK"}
+              </Button>
+              <Button onClick={handleConsentFormClose} disabled={isSubmitting}>
+                Close
+              </Button>
+            </div>
+          </Modal>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default DownloadSection;
+
