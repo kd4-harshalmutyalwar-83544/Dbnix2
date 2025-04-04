@@ -1,0 +1,876 @@
+src/
+ └── components/
+      └── FileModal/
+           ├── FileModal.js             // Main container: holds data state, API calls, pagination, download, logs, etc.
+           ├── FileModalHeader.js       // Header & filter section: handles search input, dropdowns, date picker, checkbox list, etc.
+           ├── DownloadMenu.js          // Download menu: contains the download button and dropdown menu (with its open/close state)
+           └── ConsentFormModal.js      // Consent modal: shows terms and conditions with a checkbox and slider
+
+
+
+
+
+
+
+
+
+
+////////////////////////
+
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Modal, DatePicker } from 'antd';
+import TableFile from './Tablefile/Tablefile';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import { ThreeDots } from 'react-loader-spinner';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import { ToastContainer, toast } from 'react-toastify';
+import { IoMdClose } from 'react-icons/io';
+import { ArrowDropDownIcon } from '@mui/x-date-pickers';
+import axios from 'axios';
+import moment from 'moment';
+import StateContext from '../../../context/StateContext';
+import FileModalHeader from './FileModalHeader';
+import DownloadMenu from './DownloadMenu';
+import ConsentFormModal from './ConsentFormModal';
+import './FileModal.css';
+
+// Destructure Antd date picker component
+const { RangePicker } = DatePicker;
+
+const FileModal = ({ modalOpen, setModalOpen }) => {
+  // =================== Shared State (Data, Pagination, etc.) ===================
+  const { fileNameToSend, apiBaseUrl, setLogoutTimers, folderName, checkedColumns, setCheckedColumns } = useContext(StateContext);
+  const [pdata, setPdata] = useState([{}]);                   // Table data state
+  const [numRows, setNumRows] = useState(1);                   // Total rows count
+  const [accessGranted, setAccessGranted] = useState(true);    // User access flag
+  const [fileModalLoader, setFile_Modal_Loader] = useState(false); // Loader flag while fetching data
+  const [dateFromFile, setDateFromFile] = useState(null);      // Date received from API
+  const [startDateTable, setStartDate] = useState(null);       // Start date for filtering
+  const [endDateTable, setEndDate] = useState(null);           // End date for filtering
+  const [page, setPage] = useState(1);                         // Pagination current page
+  const [pageWithDate, setPageWithDate] = useState(false);     // Flag if filtering by date is active
+  const [valueSearchText, setValueSearchText] = useState('');  // Search text (from filter)
+  const [selectedSearchColumn, setSelectedSearchColumn] = useState(''); // Search column selected
+  const [fullDataToDownloadLoader, setFullDataToDownloadLoader] = useState(false); // Loader flag for downloads
+  const [downloadFileName, setDownloadFileName] = useState(''); // Filename to download
+  const [cancelTokenSource, setCancelTokenSource] = useState(null); // Axios cancel token
+
+  // =================== Local UI State (for Consent & Menu) ===================
+  const [isChecked, setIsChecked] = useState(false);         // Consent checkbox state
+  const [isOpen, setIsOpen] = useState(false);               // For opening/closing dropdown in header
+  const [anchorEl, setAnchorEl] = useState(null);            // Download menu anchor
+  const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);// Submenu anchor for download menu
+  const [subMenuAnchorEl2, setSubMenuAnchorEl2] = useState(null);// Second submenu anchor for download menu
+  const [currentSubMenu, setCurrentSubMenu] = useState('');    // Which submenu is open
+  const [fileDownloadRequest, setFileDownloadRequest] = useState(null); // Selected download type
+  const [showConsentForm, setShowConsentForm] = useState(false); // Flag for showing consent modal
+  const [inputValue, setInputValue] = useState(700000);      // For slider (rows per sheet)
+  // -------------------- Other States --------------------
+  const [searchTextForFilter, setSearchTextForFilter] = useState(''); // Search filter input
+  const [searchTerm, setSearchTerm] = useState('');           // For filtering column list
+  const [columns, setColumns] = useState([]);                 // Columns from API
+
+  const userId = sessionStorage.getItem('userId');
+  const userRole = sessionStorage.getItem("userRole") || "";
+  const pageSize = 100;
+
+  // =================== Functions for Responsiveness & Data Fetching ===================
+
+  // Handler for slider change in Consent Modal
+  const onChange = (newValue) => {
+    setInputValue(newValue < 0 ? 1 : newValue);
+  };
+
+  // Function to disable dates in RangePicker
+  const disableDate = (current) => {
+    if (userRole === 'User ' && dateFromFile) {
+      const from = moment(dateFromFile);
+      const minDate = from.clone().add(-3, 'days');
+      return current.isAfter(from, "day") || current.isBefore(minDate, "day");
+    }
+    return dateFromFile ? current.isAfter(moment(dateFromFile), "day") : false;
+  };
+
+  // Handle date change from RangePicker (for filtering)
+  const handleDateChange = (dates) => {
+    if (dates && dates.length >= 2) {
+      // Parse dateFromFile to determine limits (business logic remains unchanged)
+      const [day, month, year] = dateFromFile.split('/').map(Number);
+      const formatted_Date = new Date(year, month - 1, day);
+      const maxBusinessDate = new Date(formatted_Date);
+      const startDateLimit = new Date(maxBusinessDate);
+      startDateLimit.setDate(startDateLimit.getDate() - 4);
+      const endDateLimit = new Date(maxBusinessDate);
+      endDateLimit.setDate(endDateLimit.getDate() + 1);
+
+      let sdate = new Date(dates[0]);
+      sdate.setDate(sdate.getDate() + 1);
+      let edate = new Date(dates[1]);
+      edate.setDate(edate.getDate() + 1);
+
+      if (userRole === 'User') {
+        if (edate > endDateLimit) {
+          toast.error("End Date is Out of Permitted Range...", { theme: "colored" });
+          setPageWithDate(false);
+          return;
+        } else if (sdate < startDateLimit) {
+          toast.error("Start Date is Out of Permitted Range...", { theme: "colored" });
+          setPageWithDate(false);
+          return;
+        }
+      }
+      setStartDate(sdate.toISOString().split('T')[0]);
+      setEndDate(edate ? edate.toISOString().split('T')[0] : '');
+      // Fetch filtered data
+      fetchContentInFilesWithDate(fileNameToSend, page);
+    } else {
+      setStartDate(null);
+      setEndDate(null);
+      setPageWithDate(false);
+    }
+  };
+
+  // =================== API Calls & Data Fetching ===================
+
+  // Fetch table content (without date filter)
+  const fetchContentInFiles = async (filename, newPage) => {
+    setFile_Modal_Loader(true);
+    try {
+      const getContentInFilesApiUrl = `${apiBaseUrl}api/ReportModules/getModalData`;
+      const filesResponse = await axios.post(getContentInFilesApiUrl, {
+        username: userId,
+        filename,
+        foldername: folderName,
+        checkedColumnName: checkedColumns.length > 0 ? checkedColumns : ["*"],
+        pagesize: pageSize,
+        pagenumber: newPage,
+      }, { withCredentials: true });
+
+      if (filesResponse.data === "You don't have access to this data" ||
+          filesResponse.data === "No Data Found" ||
+          filesResponse.data.totalCount === 0) {
+        setAccessGranted(false);
+      } else {
+        setPdata(filesResponse.data.data);
+        setNumRows(filesResponse.data.totalCount);
+        setAccessGranted(true);
+      }
+      setPage(newPage);
+      setFile_Modal_Loader(false);
+    } catch (error) {
+      setFile_Modal_Loader(false);
+      console.error("Error fetching files:", error);
+    }
+  };
+
+  // Fetch table content with date filtering
+  const fetchContentInFilesWithDate = async (filename, newPage) => {
+    setFile_Modal_Loader(true);
+    try {
+      const getContentInFilesApiUrl = `${apiBaseUrl}api/ReportModules/getModalDataWithDate`;
+      const filesResponse = await axios.post(getContentInFilesApiUrl, {
+        username: userId,
+        filename,
+        foldername: folderName,
+        checkedColumnName: checkedColumns.length > 0 ? checkedColumns : ["*"],
+        pagesize: pageSize,
+        pagenumber: newPage,
+        startDate: startDateTable,
+        endDate: endDateTable,
+      }, { withCredentials: true });
+
+      if (filesResponse.data === "You don't have access to this data" ||
+          filesResponse.data === "No Data Found" ||
+          filesResponse.data.totalCount === 0) {
+        setAccessGranted(false);
+      } else {
+        setPdata(filesResponse.data.data);
+        setNumRows(filesResponse.data.totalCount);
+        setAccessGranted(true);
+      }
+      setPageWithDate(true);
+      setPage(newPage);
+      setFile_Modal_Loader(false);
+    } catch (error) {
+      setFile_Modal_Loader(false);
+      console.error("Error fetching files with date:", error);
+    }
+  };
+
+  // Fetch maximum business date from API
+  const fetchMaxDate = async () => {
+    try {
+      const sortedDataResponse = await axios.get(`${apiBaseUrl}api/ReportModules/maxBusinessDate/${fileNameToSend}/${folderName}`, { withCredentials: true });
+      const dateStr = sortedDataResponse.data.substring(0, 10);
+      setDateFromFile(dateStr);
+      setStartDate(dateStr);
+      setEndDate(dateStr);
+    } catch (error) {
+      console.error("Error fetching max date:", error);
+    }
+  };
+
+  // Fetch available columns for filtering
+  const fetchColumns = async () => {
+    try {
+      const response = await fetch(`${apiBaseUrl}api/ReportModules/GetFieldNamesAccordingToUser?username=${userId}&filename=${fileNameToSend}&foldername=${folderName}`);
+      const data = await response.json();
+      setColumns(data);
+      // (If needed, you can also build options for dropdown here)
+      setCheckedColumns(data);
+    } catch (error) {
+      console.error('Error fetching column names:', error);
+    }
+  };
+
+  // =================== Download Functionality ===================
+
+  // Handles file download (calls API and then downloads file)
+  const getFullFileData = async (filename, fileTypes) => {
+    const source = axios.CancelToken.source();
+    setCancelTokenSource(source);
+    setFullDataToDownloadLoader(true);
+    setLogoutTimers(30);
+    sessionStorage.setItem("process", true);
+    let getFullDataUrl = `${apiBaseUrl}api/ReportModules/`;
+    try {
+      if (valueSearchText !== '') {
+        getFullDataUrl += 'GenerateFullFileDataFromTableAfterFilter';
+      } else {
+        getFullDataUrl += 'GetAlldataAndGenerateFile';
+      }
+      const filesResponse = await axios.post(getFullDataUrl, {
+        username: userId,
+        filename,
+        foldername: folderName,
+        checkedColumns: checkedColumns.length > 0 ? checkedColumns : ["*"],
+        searchColumn: selectedSearchColumn,
+        searchValue: valueSearchText,
+        startDate: startDateTable,
+        endDate: endDateTable,
+        fileFormat: fileTypes,
+        maxRowsPerSheet: maxRowsPerSheet,
+      }, {
+        withCredentials: true,
+        responseType: 'blob',
+        cancelToken: source.token,
+      });
+
+      if (filesResponse.status === 200) {
+        const blob = new Blob([filesResponse.data], { type: filesResponse.headers['content-type'] });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${downloadFileName}.zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setLogoutTimers(5);
+        toast.success("Download successfully...", { theme: "colored" });
+      } else {
+        toast.error("Something went wrong...", { theme: "colored" });
+      }
+      setFullDataToDownloadLoader(false);
+    } catch (error) {
+      console.error("Error during download:", error);
+      toast.error("Something went wrong...", { theme: "colored" });
+      setFullDataToDownloadLoader(false);
+    } finally {
+      sessionStorage.setItem("process", false);
+    }
+  };
+
+  // Cancels the file download if needed
+  const cancelDownload = () => {
+    if (cancelTokenSource) {
+      cancelTokenSource.cancel('Download canceled');
+      sessionStorage.setItem("process", false);
+    }
+  };
+
+  // =================== Consent Form & Download Trigger ===================
+
+  // Called when the consent checkbox changes in the Consent Modal
+  const handleConsentBoxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+  // Closes the consent modal
+  const handleConsentFormClose = () => {
+    setShowConsentForm(false);
+    setFileDownloadRequest(null);
+    setIsChecked(false);
+  };
+
+  // Sends consent data to API (logs consent)
+  const consentUpdate = async () => {
+    const consentDetails = {
+      "Username": userId,
+      "Folder": folderName,
+      "file": fileNameToSend,
+      "type": fileDownloadRequest,
+    };
+    try {
+      const apiToFetch = `${apiBaseUrl}api/UsersLogs/InsertConsentDetails`;
+      await axios.post(apiToFetch, consentDetails, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error("Consent update error:", error);
+    }
+  };
+
+  // Handler for consent form submission; triggers file download after logging consent
+  const handleConsentFormSubmit = async () => {
+    if (fileDownloadRequest) {
+      await consentUpdate();
+      await performFileDownload(fileDownloadRequest);
+      handleConsentFormClose();
+    }
+  };
+
+  // Opens the consent modal and sets the file download type
+  const handleFileDownload = (type) => {
+    handleClose(); // close download menu
+    setFileDownloadRequest(type);
+    setShowConsentForm(true);
+    // Set the download filename based on available dates
+    if (startDateTable && endDateTable) {
+      setDownloadFileName(`${fileNameToSend}(${startDateTable}_${endDateTable})`);
+    } else {
+      setDownloadFileName(`${fileNameToSend}(${dateFromFile})`);
+    }
+  };
+
+  // Performs the file download based on the requested type (current page or full file)
+  const performFileDownload = async (e) => {
+    // Log user action (userLogs function)
+    userLogs();
+    sessionStorage.setItem("process", true);
+    setFullDataToDownloadLoader(true);
+    try {
+      if (e.startsWith('F')) {
+        if (e === 'Fxlsx') await getFullFileData(fileNameToSend, 'xlsx');
+        else if (e === 'Fcsv') await getFullFileData(fileNameToSend, 'csv');
+        else if (e === 'Fhtxt') await getFullFileData(fileNameToSend, 'htxt');
+        else if (e === 'Ftxt') await getFullFileData(fileNameToSend, 'txt');
+      } else {
+        // For current page download, use XLSX or CSV or TXT conversion functions
+        if (e === 'Cxlsx') {
+          // Convert JSON to XLSX and download
+          const ws = XLSX.utils.json_to_sheet(pdata);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+          XLSX.writeFile(wb, `${downloadFileName}.xlsx`);
+        } else if (e === 'Ccsv') {
+          const csv = Papa.unparse(pdata);
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${downloadFileName}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } else if (e === 'Chtxt') {
+          const tabSeparatedContent = convertToText(pdata);
+          const blob = new Blob([tabSeparatedContent], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${downloadFileName}.txt`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } else if (e === 'Ctxt') {
+          const tabSeparatedContent = convertToTextWithoutHeader(pdata);
+          const blob = new Blob([tabSeparatedContent], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${downloadFileName}.txt`;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      }
+    } catch (error) {
+      console.error("Error during file download:", error);
+      toast.error("Something went wrong during the download...", { theme: "colored" });
+    } finally {
+      setFullDataToDownloadLoader(false);
+      sessionStorage.setItem("process", false);
+    }
+  };
+
+  // =================== Utility Functions ===================
+  // Convert table data to a tab-separated text string (with header)
+  const convertToText = (data) => {
+    if (!data || data.length === 0) return '';
+    const columns = Object.keys(data[0]);
+    const colWidths = columns.map(col => Math.max(col.length, ...data.map(row => (row[col] ? row[col].toString().length : 0))));
+    const header = columns.map((col, i) => col.padEnd(colWidths[i])).join('\t');
+    const separator = colWidths.map(width => ''.repeat(width)).join('\t');
+    const rows = data.map(row => columns.map((col, i) => (row[col] ? row[col].toString().padEnd(colWidths[i]) : ' '.repeat(colWidths[i]))).join('\t'));
+    return [header, separator, ...rows].join('\n');
+  };
+
+  // Convert table data to a tab-separated text string (without header)
+  const convertToTextWithoutHeader = (data) => {
+    if (!data || data.length === 0) return '';
+    const columns = Object.keys(data[0]);
+    const colWidths = columns.map(col => Math.max(col.length, ...data.map(row => (row[col] ? row[col].toString().length : 0))));
+    const separator = colWidths.map(width => ''.repeat(width)).join('\t');
+    const rows = data.map(row => columns.map((col, i) => (row[col] ? row[col].toString().padEnd(colWidths[i]) : ' '.repeat(colWidths[i]))).join('\t'));
+    return [separator, ...rows].join('\n');
+  };
+
+  // Log user action for download (calls API)
+  const userLogs = async () => {
+    const logData = {
+      "username": userId,
+      "action": "Download",
+      "downloadUploadFile": fileNameToSend
+    };
+    try {
+      const apiToFetch = `${apiBaseUrl}api/UsersLogs/UserAction`;
+      await axios.post(apiToFetch, logData, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error("User logs error:", error);
+    }
+  };
+
+  // =================== Search Functionality ===================
+  // Debounce function for search text input (to reduce API calls)
+  const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+  const debouncedSearchTextData = useCallback(debounce((page, column, searchText) => {
+    handleSearchText(page, column, searchText);
+  }, 1000), []);
+
+  // Handle change of search text input
+  const handleAllTextSearch = (e) => {
+    const searchValueText = e.target.value;
+    setSearchTextForFilter(searchValueText);
+    if (searchValueText === '') {
+      debouncedSearchTextData(1, dropdownSelectedColumn, '');
+    } else {
+      debouncedSearchTextData(1, dropdownSelectedColumn, searchValueText);
+    }
+  };
+
+  // Fetch table data based on search text and column filter
+  const handleSearchText = async (newPage, column, searchText) => {
+    setValueSearchText(searchText);
+    setSelectedSearchColumn(column);
+    setFile_Modal_Loader(true);
+    try {
+      const urlForApi = `${apiBaseUrl}api/ReportModules/GetDataFromTableAfterFilter`;
+      const filesResponse = await axios.post(urlForApi, {
+        username: userId,
+        filename: fileNameToSend,
+        foldername: folderName,
+        checkedColumnName: checkedColumns.length > 0 ? checkedColumns : ["*"],
+        filterColumnName: column,
+        pageSize: pageSize,
+        pageNumber: newPage,
+        startDate: startDateTable,
+        endDate: endDateTable,
+      }, { withCredentials: true });
+
+      if (filesResponse.data === "You don't have access to this data" ||
+          filesResponse.data === "No Data Found" ||
+          filesResponse.data.totalCount === 0) {
+        setAccessGranted(false);
+      } else {
+        setPdata(filesResponse.data.data);
+        setNumRows(filesResponse.data.totalCount);
+        setAccessGranted(true);
+      }
+      setPage(newPage);
+      setFile_Modal_Loader(false);
+    } catch (error) {
+      console.error("Error fetching filter data:", error);
+      setFile_Modal_Loader(false);
+    }
+  };
+
+  // =================== Dropdown Handler for Column Selection ===================
+  const handleChangeDropdown = (value, label) => {
+    setDropdownSelectedColumn(label.value);
+  };
+
+  // =================== Initial Data Fetching ===================
+  useEffect(() => {
+    fetchColumns();
+    fetchContentInFiles(fileNameToSend, page);
+    fetchMaxDate();
+  }, []);
+
+  return (
+    <>
+      <Modal
+        centered
+        open={modalOpen}
+        footer={null}
+        title={null}
+        width={"1200px"}  {/* You may adjust this width in CSS for responsiveness */}
+        closeIcon={fullDataToDownloadLoader ? false : true}
+        maskClosable={false}
+        onCancel={() => setModalOpen(false)}
+      >
+        <ToastContainer />
+        <div className="modalContent">
+          {/* ---------------- Header Component: Contains search, dropdown, date picker, checkboxes ---------------- */}
+          <FileModalHeader
+            fileNameToSend={fileNameToSend}
+            dateFromFile={dateFromFile}
+            numRows={numRows}
+            searchTextForFilter={searchTextForFilter}
+            handleAllTextSearch={handleAllTextSearch}
+            handleDateChange={handleDateChange}
+            disableDate={disableDate}
+            handleChangeDropdown={handleChangeDropdown}
+            // Additional props can be passed as needed
+          />
+
+          <div className="headerContent"></div>
+
+          {/* ---------------- Table Data Section ---------------- */}
+          {file_Modal_Loader ? (
+            <div className="loader-section">
+              <ThreeDots height="200" width="150" radius="9" color="#4fa94d" ariaLabel="three-dots-loading" visible={true} />
+              <p className="loader-text">Please Wait, Data is loading...</p>
+            </div>
+          ) : (
+            <div className="tableContent">
+              {accessGranted ? (
+                <TableFile data={pdata} searchTextValue={valueSearchText} SearchTextData={handleSearchText} searchColumn={selectedSearchColumn} endDateTable={endDateTable} />
+              ) : (
+                <div className="accessDeniedMessage">
+                  {noData ? (
+                    <p className="titleReport">{noDataError ? "NO Data Found..." : "Hmm...something seems to have gone wrong."}</p>
+                  ) : (
+                    <p className="titleReport">You don't have access to this data.</p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ---------------- Pagination Section ---------------- */}
+          <div className="paginationNbutton">
+            <div className="pagination-container">
+              {numRows > 0 && (
+                <div className="paginationNbuttonModal">
+                  <div className="rows-per-page">
+                    <div className="rows-text">Rows per Page: {pageSize}</div>
+                    <Stack spacing={1}>
+                      <Pagination count={Math.ceil(numRows / pageSize)} page={page} onChange={handleChange} />
+                    </Stack>
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* ---------------- Download Menu Component ---------------- */}
+            {sessionStorage.getItem('userDownload') === '1' && (
+              <DownloadMenu
+                anchorEl={anchorEl}
+                handleClick={handleClick}
+                handleClose={handleClose}
+                handleSubMenuClick={handleSubMenuClick}
+                handleSubMenuClick2={handleSubMenuClick2}
+                handleFileDownload={handleFileDownload}
+                cancelDownload={cancelDownload}
+                fullDataToDownloadLoader={fullDataToDownloadLoader}
+              />
+            )}
+          </div>
+
+          {/* ---------------- Consent Modal Component ---------------- */}
+          <ConsentFormModal
+            open={showConsentForm}
+            isChecked={isChecked}
+            onChange={onChange}
+            onConsentChange={handleConsentBoxChange}
+            onSubmit={handleConsentFormSubmit}
+            onClose={handleConsentFormClose}
+            fullDataToDownloadLoader={fullDataToDownloadLoader}
+            numRows={numRows}
+          />
+        </div>
+      </Modal>
+    </>
+  );
+};
+
+export default FileModal;
+
+
+
+//////////////////
+
+import React from 'react';
+import { FormControl, InputLabel } from '@mui/material';
+import { Select as AntSelect, DatePicker, Input } from 'antd';
+import CheckboxComponent from './CheckboxComponent';
+import './FileModal.css';
+
+const { RangePicker } = DatePicker;
+
+const FileModalHeader = ({
+  fileNameToSend,
+  dateFromFile,
+  numRows,
+  searchTextForFilter,
+  handleAllTextSearch,
+  handleDateChange,
+  disableDate,
+  handleChangeDropdown,
+}) => {
+  return (
+    <div className="modalContentsModule">
+      <div className="header-section">
+        {/* ---------------- Left Side: File name and Filter/Checkbox ---------------- */}
+        <div className="modalViewComponent">
+          <FormControl sx={{ minWidth: 200 }} size="small">
+            <InputLabel style={{ height: "32px", paddingRight: "10px", paddingBottom: "10px", fontSize: "12px" }}>
+              {fileNameToSend}
+            </InputLabel>
+            <AntSelect
+              label={fileNameToSend}
+              // The dropdown open/close is controlled by parent via props if needed
+              style={{ height: 32 }}
+              // MenuProps can be customized here
+            >
+              {/* Text field for filtering columns */}
+              <Input
+                placeholder="Select Column Name"
+                style={{ height: 25 }}
+                onClick={(e) => e.stopPropagation()}
+                onChange={handleAllTextSearch}
+                value={searchTextForFilter}
+              />
+              {/* Checkbox component for selecting columns */}
+              <div onClick={(e) => e.stopPropagation()}>
+                <CheckboxComponent />
+              </div>
+            </AntSelect>
+          </FormControl>
+        </div>
+        {/* ---------------- Middle: Dropdown for selecting column for search ---------------- */}
+        <div className="dropdown-section">
+          <FormControl sx={{ minWidth: 150, height: 32 }} size="small">
+            <AntSelect
+              placeholder="Click to Select Column"
+              style={{ height: 32, fontSize: "12px", borderRadius: "0.4rem" }}
+              onChange={handleChangeDropdown}
+              // filterOption can be set if needed
+            />
+          </FormControl>
+        </div>
+        {/* ---------------- Right: Search input and Date Picker ---------------- */}
+        <div className="search-date-section">
+          <FormControl sx={{ minWidth: 150, height: 32 }} size="small">
+            <Input
+              placeholder="Enter text to search"
+              onChange={handleAllTextSearch}
+              style={{ borderRadius: "0.4rem" }}
+            />
+          </FormControl>
+          <FormControl sx={{ minWidth: 150, height: 32 }} size="small">
+            <RangePicker
+              onChange={handleDateChange}
+              disabledDate={disableDate}
+            />
+          </FormControl>
+        </div>
+        <div className="date-count">
+          <p className="titleReport_date">Refresh on: {dateFromFile}</p>
+          <p className="titleReport_date">Count: {numRows}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FileModalHeader;
+
+
+
+////////////////////////////////////////
+import React, { useState } from 'react';
+import { Button, Menu, MenuItem, Box, LinearProgress } from '@mui/material';
+import { ArrowDropDownIcon } from '@mui/x-date-pickers';
+import { IoMdClose } from 'react-icons/io';
+import './FileModal.css';
+
+const DownloadMenu = ({
+  fullDataToDownloadLoader,
+  anchorEl,
+  handleClick,
+  handleClose,
+  handleSubMenuClick,
+  handleSubMenuClick2,
+  handleFileDownload,
+  cancelDownload,
+}) => {
+  // Local state can be added here if needed; in this example, we assume the parent controls anchorEl.
+  return (
+    <div className="btnSec">
+      {fullDataToDownloadLoader ? (
+        <div className="downloading-section">
+          <p>Downloading...</p>
+          <Box sx={{ width: '35%', height: "25px", position: "relative", alignSelf: "center", paddingTop: "5px" }}>
+            <LinearProgress />
+          </Box>
+          <div className="cancel-btn">
+            <IoMdClose fill="red" size={15} onClick={cancelDownload} />
+          </div>
+        </div>
+      ) : (
+        <>
+          <Button
+            id="download-button"
+            aria-controls={anchorEl ? 'download-menu' : undefined}
+            aria-haspopup="true"
+            onClick={handleClick}
+            variant="contained"
+            endIcon={<ArrowDropDownIcon />}
+            style={{ color: 'black', backgroundColor: '#e5e5ea' }}
+          >
+            Download
+          </Button>
+          <Menu
+            id="download-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            MenuListProps={{ 'aria-labelledby': 'download-button' }}
+          >
+            <MenuItem onClick={(event) => handleSubMenuClick(event, 'currentPage')}>
+              Current Page Download
+            </MenuItem>
+            <Menu
+              id="current-page-menu"
+              anchorEl={anchorEl}
+              open={false} // For simplicity, submenu open state can be managed further if needed
+              onClose={handleClose}
+            >
+              <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Ccsv'); }}>CSV</MenuItem>
+              <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Cxlsx'); }}>XLSX</MenuItem>
+              <MenuItem onClick={handleSubMenuClick2}>TEXT</MenuItem>
+              <Menu
+                id="text-menu"
+                anchorEl={anchorEl}
+                open={false}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Chtxt'); }}>With Header</MenuItem>
+                <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Ctxt'); }}>Without Header</MenuItem>
+              </Menu>
+            </Menu>
+            <MenuItem onClick={(event) => handleSubMenuClick(event, 'fullFile')}>
+              {/** If a search filter is active, display appropriate text */}
+              {/** Otherwise, show full file download option */}
+              {/** This option triggers the download for full data */}
+              {/** via parent's handleFileDownload */}
+              {''}
+              {/** For brevity, similar submenu structure can be repeated for full file download */}
+              {searchTextForFilter !== '' ? 'Filter Full Data Download' : 'Full File Download'}
+            </MenuItem>
+            <Menu
+              id="full-file-menu"
+              anchorEl={anchorEl}
+              open={false}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Fcsv'); }}>CSV</MenuItem>
+              <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Fxlsx'); }}>XLSX</MenuItem>
+              <MenuItem onClick={handleSubMenuClick2}>TEXT</MenuItem>
+              <Menu
+                id="text-menu"
+                anchorEl={anchorEl}
+                open={false}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Ftxt'); }}>With Header</MenuItem>
+                <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Fhtxt'); }}>Without Header</MenuItem>
+              </Menu>
+            </Menu>
+          </Menu>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default DownloadMenu;
+
+
+///////////////////////////
+import React, { useState } from 'react';
+import { Modal, Button, Row, Col, Slider, InputNumber, Input } from 'antd';
+import './FileModal.css';
+
+const ConsentFormModal = ({ open, isChecked, onConsentChange, onChange, onSubmit, onClose, fullDataToDownloadLoader, numRows }) => {
+  // Local state can be managed here if needed; in this example, most state is controlled by parent.
+  return (
+    <Modal
+      centered
+      open={open}
+      footer={null}
+      title={null}
+      width={"auto"}
+      closeIcon={!fullDataToDownloadLoader}
+      maskClosable={false}
+      onCancel={onClose}
+    >
+      <div className="consent-form">
+        <h3>Terms and Conditions</h3>
+        <p style={{ color: 'red' }}>
+          1. It is the responsibility of the concerned Business Users to validate the downloaded data. <br />
+          2. The data located in the specified folder is restricted exclusively to the team members associated with given permission. <br />
+          3. Any data downloaded from the specified folder will result in a transfer of ownership to the downloading team. <br />
+          4. Users need to make sure to download within given timelines. <br />
+          5. Any SR raised for data sets, service timeline is 7 working days.
+        </p>
+        <div>
+          <Input type='checkbox' id='agree' checked={isChecked} onChange={onConsentChange} />&nbsp;
+          <label htmlFor='agree'> I Agree </label>
+        </div>
+        <br />
+        {isChecked && fileDownloadRequest && fileDownloadRequest.startsWith("F") && (
+          <div>
+            Rows Per Sheet:
+            <Row>
+              <Col span={12}>
+                <Slider min={1} max={numRows} onChange={onChange} value={typeof onChange === 'number' ? onChange : 0} />
+              </Col>
+              <Col span={4}>
+                <InputNumber min={1} max={numRows} style={{ margin: '0 16px' }} onChange={onChange} />
+              </Col>
+            </Row>
+          </div>
+        )}
+        <Button onClick={onSubmit} disabled={!isChecked} style={{ width: '75px' }}>
+          OK
+        </Button>
+        &nbsp;&nbsp;
+        <Button onClick={onClose} style={{ width: '75px' }}>
+          Close
+        </Button>
+      </div>
+    </Modal>
+  );
+};
+
+export default ConsentFormModal;
