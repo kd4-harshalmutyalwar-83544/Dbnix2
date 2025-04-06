@@ -1,0 +1,242 @@
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    align-items: center;
+    justify-content: center;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px;
+  }
+  
+  /* HEADER: Filters and Inputs Row */
+  .modalViewComponent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+    flex-wrap: wrap;
+  }
+  
+  /* Table Section */
+  .tableContent {
+    width: 100%;
+    overflow-x: auto;
+    max-height: 46vh;
+    margin: 10px 0;
+  }
+  
+  /* Access Denied or No Data Message */
+  .accessDeniedMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    color: #365566;
+    font-size: 1.2rem;
+  }
+  
+  /* Row Count + Refresh Date */
+  .titleReport_date {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 500;
+  }
+  
+  .titleReport {
+    color: #365566;
+    font-family: Arial;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 2% 2% 0;
+  }
+  
+  /* Header Text */
+  .modalContentsModule {
+    color: #365566;
+    font-family: Arial;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-left: 12px;
+  }
+  
+  /* Pagination + Download Row */
+  .paginationNbutton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 30px;
+  }
+  
+  .paginationNbuttonModal {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .btnSec {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  /* Download Progress Line */
+  .download-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  /* Consent Modal */
+  .consent-form {
+    max-width: 500px;
+    padding: 10px;
+  }
+  
+  .consent-form p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  
+  /* Checkbox */
+  .fileModalCheckbox .modelCheckboxes input[type="checkbox"] {
+    height: 14px;
+    width: 14px;
+    margin-right: 4px;
+  }
+  
+  /* Responsive for Medium to Small Desktop */
+  @media (max-width: 1200px) {
+    .modalViewComponent {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+  
+    .paginationNbutton {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+  
+    .btnSec {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .tableContent {
+      max-height: 40vh;
+    }
+  }
+  
+  /* Table Row Hover */
+  .ant-table-tbody > tr:hover > td {
+    background-color: #f5f7fa !important;
+  }
+  
+  /* Styled Antd Table Header */
+  .ant-table-thead > tr > th {
+    background-color: #2455dc;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+  }
+  
+  /* Active Pagination Styling */
+  .ant-pagination-item-active {
+    background-color: #4968ff !important;
+    border-color: #4968ff !important;
+    color: white !important;
+  }
+  .ant-pagination-item-active a {
+    color: white !important;
+  }
+
+
+  /* ===================== */
+/* Compact Laptop Layout */
+/* ===================== */
+@media (max-width: 1024px) {
+    .modalViewComponent {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: 8px;
+    }
+  
+    .paginationNbutton {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .btnSec {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .tableContent {
+      max-height: 38vh;
+    }
+  
+    .consent-form {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+  
+  
+  /* ===================== */
+  /* Mobile / Tablet Layout */
+  /* ===================== */
+  @media (max-width: 768px) {
+    .modalContent {
+      padding: 10px;
+    }
+  
+    .modalViewComponent {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      gap: 10px;
+    }
+  
+    .paginationNbutton {
+      flex-direction: column;
+      gap: 15px;
+      align-items: stretch;
+    }
+  
+    .btnSec {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  
+    .tableContent {
+      max-height: 30vh;
+      overflow-x: auto;
+    }
+  
+    .titleReport,
+    .titleReport_date {
+      font-size: 1rem;
+      text-align: center;
+    }
+  
+    .consent-form {
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  
+    .consent-form p {
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+  }
+  
+  
