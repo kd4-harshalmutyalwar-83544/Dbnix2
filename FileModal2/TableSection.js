@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThreeDots } from 'react-loader-spinner';
-import Tablefile from './Tablefile/Tablefile';
+import TableFile from './Tablefile/TableFile';
 
 const TableSection = ({
   fileModalLoader,
@@ -15,50 +15,31 @@ const TableSection = ({
 }) => {
   if (fileModalLoader) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignSelf: 'center',
-          flexDirection: 'column',
-          gap: '1%'
-        }}
-      >
-        <ThreeDots
-          height="200"
-          width="150"
-          radius="9"
-          color="#4fa94d"
-          ariaLabel="three-dots-loading"
-          visible={true}
-        />
-        <p style={{ alignSelf: 'center' }}>Please wait, data is loading...</p>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+        <ThreeDots height="80" width="80" color="#4fa94d" visible />
+        <p>Please wait, data is loading...</p>
+      </div>
+    );
+  }
+
+  if (!accessGranted) {
+    return (
+      <div className="accessDeniedMessage">
+        <p className="titleReport">
+          {noData ? (noDataError ? 'No Data Found...' : 'Hmm... something seems to have gone wrong.') : "You don't have access to this data."}
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="tableContent">
-      {accessGranted ? (
-        <Tablefile
-          data={pdata}
-          searchTextValue={valueSearchText}
-          SearchTextData={handleSearchText}
-          searchColumn={selectedSearchColumn}
-          endDateTable={endDateTable}
-        />
-      ) : (
-        <div className="accessDeniedMessage">
-          {noData ? (
-            <p className="titleReport">
-              {noDataError ? 'No Data Found...' : 'Hmm... something seems to have gone wrong.'}
-            </p>
-          ) : (
-            <p className="titleReport">You don't have access to this data.</p>
-          )}
-        </div>
-      )}
-    </div>
+    <TableFile
+      data={pdata}
+      searchTextValue={valueSearchText}
+      SearchTextData={handleSearchText}
+      searchColumn={selectedSearchColumn}
+      endDateTable={endDateTable}
+    />
   );
 };
 

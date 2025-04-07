@@ -107,6 +107,50 @@
     width: 14px;
     margin-right: 4px;
   }
+
+
+  .modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    align-self: center;
+    justify-content: center;
+  }
+  
+  .modalContentsModule {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .titleReport_date {
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  .headerMeta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  
+  .tableContent {
+    max-height: 46vh;
+    margin: 10px 0;
+  }
+  
+  .paginationNbutton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+  }
+  
+  .paginationNbuttonModal {
+    display: flex;
+    gap: 4vw;
+  }
+  
   
   /* Responsive for Medium to Small Desktop */
   @media (max-width: 1200px) {
