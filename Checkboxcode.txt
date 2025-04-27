@@ -1,0 +1,201 @@
+################ReportMaster
+
+namespace FileModal.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+[Table("ReportMaster")]
+public class ReportMaster
+{
+    [Key]
+    public int ReportId { get; set; }
+    public int ContentId { get; set; }
+    public string ReportName { get; set; }
+
+    [ForeignKey("ContentId")]
+    public ContentMaster ContentMaster { get; set; }
+}
+
+
+
+###################
+
+namespace FileModal.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+[Table("ContentAccess")]
+public class ContentAccess
+{
+    [Key]
+    public int ContentAccessId { get; set; }
+    public int ContentId { get; set; }
+    public string ColumnName { get; set; }
+    public int UserId { get; set; }
+
+    [ForeignKey("ContentId")]
+    public ContentMaster ContentMaster { get; set; }
+}
+
+
+#######################
+
+
+namespace FileModal.Models;
+
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+[Table("ContentMaster")]
+public class ContentMaster
+{
+    [Key]
+    public int ContentId { get; set; }
+    public string DatabaseName { get; set; }
+    public string FileName { get; set; }
+    public string FolderName { get; set; }
+}
+
+######################################################
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using FileModal.Models;
+
+[Route("api/[controller]")]
+[ApiController]
+public class FileDownloadController : ControllerBase
+{
+    private readonly DownloadDbContext _context;
+    private readonly IConfiguration _configuration;
+
+    public FileDownloadController(DownloadDbContext context, IConfiguration configuration)
+    {
+        _context = context;
+        _configuration = configuration;
+    }
+
+    [HttpPost("DownloadSelectedFiles")]
+    public async Task<IActionResult> DownloadSelectedFiles([FromBody] DownloadRequest request)
+    {
+        if (request.ContentIds == null || !request.ContentIds.Any())
+            return BadRequest("No files selected.");
+
+        using var package = new ExcelPackage();
+
+        foreach (var contentId in request.ContentIds)
+        {
+            var contentInfo = await _context.ContentMasters
+                .FirstOrDefaultAsync(x => x.ContentId == contentId);
+
+            if (contentInfo == null)
+                continue;
+
+            var accessibleColumns = await _context.ContentAccesses
+                .Where(x => x.ContentId == contentId)
+                .Select(x => x.ColumnName)
+                .ToListAsync();
+
+            var reportInfo = await _context.ReportMasters
+                .FirstOrDefaultAsync(x => x.ContentId == contentId);
+
+            if (reportInfo == null || !accessibleColumns.Any())
+                continue;
+
+            // Build dynamic query
+            string columns = string.Join(", ", accessibleColumns);
+            string query = $"SELECT {columns} FROM {contentInfo.DatabaseName}..{reportInfo.ReportName}";
+
+            var dataTable = await ExecuteQueryAsync(query);
+
+            var worksheet = package.Workbook.Worksheets.Add(contentInfo.FileName);
+            worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
+        }
+
+        var stream = new MemoryStream(package.GetAsByteArray());
+
+        return File(stream,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "SelectedFiles.xlsx");
+    }
+
+    private async Task<DataTable> ExecuteQueryAsync(string query)
+    {
+        var dt = new DataTable();
+        var connectionString = _configuration.GetConnectionString("ICICI");
+
+        await using var conn = new SqlConnection(connectionString);
+        await using var cmd = new SqlCommand(query, conn);
+         using var adapter = new SqlDataAdapter(cmd);
+
+        await conn.OpenAsync();
+        adapter.Fill(dt);
+
+        return dt;
+    }
+}
+
+
+##############################################################
+
+
+using FileModal.Models;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using System.ComponentModel;
+
+
+namespace Program
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            var provider = builder.Services.BuildServiceProvider();
+            var config = provider.GetRequiredService<IConfiguration>();
+            builder.Services.AddDbContext<DownloadDbContext>(item => item.UseSqlServer(config.GetConnectionString("ICICI")));
+
+
+
+            var app = builder.Build();
+
+            OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+
+
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
+}
+###################################################
+
+namespace FileModal.Models
+{
+    public class DownloadRequest
+    {
+        public List<int> ContentIds { get; set; } = new List<int>();
+    }
+}
+
