@@ -1,0 +1,873 @@
+/* ========================================
+   DESKTOP FIRST RESPONSIVE DESIGN
+   ======================================== */
+
+/* Base Desktop Styles (1920px and above) */
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+  padding: 2rem;
+  min-height: 80vh;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Header Section */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.modalViewComponent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.date-count {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 200px;
+  text-align: right;
+}
+
+/* Form Controls */
+.modalViewComponent .MuiFormControl-root {
+  min-width: 180px;
+  flex: 1;
+  max-width: 250px;
+}
+
+.modalViewComponent .ant-select,
+.modalViewComponent .MuiInput-root,
+.modalViewComponent .ant-picker {
+  width: 100% !important;
+  min-width: 150px;
+}
+
+/* Table Content */
+.tableContent {
+  flex: 1;
+  overflow: auto;
+  max-height: 60vh;
+  margin: 1rem 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Table Styling */
+.tableContent table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: white;
+}
+
+.tableContent th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 2px solid #5a6cb8;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.tableContent td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+  word-wrap: break-word;
+  max-width: 200px;
+}
+
+.tableContent tbody tr:hover {
+  background-color: #f8f9ff;
+  transition: background-color 0.2s ease;
+}
+
+.tableContent tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Pagination and Button Section */
+.paginationNbutton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.5rem 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.pagination-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.paginationNbuttonModal {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.rows-per-page {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rows-text {
+  font-weight: 500;
+  color: #365566;
+  white-space: nowrap;
+}
+
+.btnSec {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Download Section Styling */
+.downloading-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background: #e3f2fd;
+  border-radius: 6px;
+  border: 1px solid #90caf9;
+}
+
+.downloading-section p {
+  margin: 0;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.cancel-btn {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+/* Loader Section */
+.loader-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+}
+
+.loader-text {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Access Denied Message */
+.accessDeniedMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.titleReport {
+  color: #365566;
+  font-family: Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.titleReport_date {
+  font-size: 0.95rem;
+  margin: 0;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Consent Form */
+.consent-form {
+  padding: 2rem;
+  max-width: 600px;
+}
+
+.consent-form h3 {
+  margin-bottom: 1rem;
+  color: #365566;
+  font-size: 1.3rem;
+}
+
+.consent-form p {
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Custom Pagination Styles */
+.ant-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
+  transition: all 0.2s;
+  background-color: #E9F0FF;
+  border-color: #4968ff;
+}
+
+.ant-pagination .ant-pagination-item-active {
+  background-color: #4968ff !important;
+  border-color: #4968ff !important;
+}
+
+.ant-pagination .ant-pagination-item-active a {
+  color: white !important;
+}
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS - DESKTOP FIRST
+   ======================================== */
+
+/* Large Desktop (1600px - 1919px) */
+@media (max-width: 1919px) {
+  .modalContent {
+    padding: 1.5rem;
+  }
+  
+  .tableContent {
+    font-size: 13px;
+  }
+  
+  .modalViewComponent .MuiFormControl-root {
+    min-width: 160px;
+    max-width: 220px;
+  }
+}
+
+/* Standard Desktop (1400px - 1599px) */
+@media (max-width: 1599px) {
+  .modalContent {
+    padding: 1.2rem;
+    gap: 1.2vh;
+  }
+  
+  .header-section {
+    padding: 0.8rem;
+  }
+  
+  .modalViewComponent {
+    gap: 0.8rem;
+  }
+  
+  .tableContent {
+    max-height: 55vh;
+    font-size: 12px;
+  }
+  
+  .tableContent th {
+    padding: 10px 6px;
+    font-size: 12px;
+  }
+  
+  .tableContent td {
+    padding: 8px 6px;
+    max-width: 180px;
+  }
+  
+  .modalViewComponent .MuiFormControl-root {
+    min-width: 140px;
+    max-width: 200px;
+  }
+}
+
+/* Compact Desktop (1200px - 1399px) */
+@media (max-width: 1399px) {
+  .modalContent {
+    padding: 1rem;
+    gap: 1vh;
+  }
+  
+  .header-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+  
+  .modalViewComponent {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .date-count {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+  
+  .tableContent {
+    max-height: 50vh;
+    font-size: 11px;
+  }
+  
+  .tableContent th {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+  
+  .tableContent td {
+    padding: 6px 4px;
+    max-width: 150px;
+  }
+  
+  .paginationNbutton {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .rows-per-page {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}
+
+/* Small Desktop/Large Laptop (1024px - 1199px) */
+@media (max-width: 1199px) {
+  .modalContent {
+    padding: 0.8rem;
+  }
+  
+  .modalViewComponent {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    gap: 1rem;
+  }
+  
+  .modalViewComponent .MuiFormControl-root {
+    min-width: 120px;
+    max-width: 100%;
+  }
+  
+  .tableContent {
+    max-height: 45vh;
+    font-size: 10px;
+  }
+  
+  .tableContent th,
+  .tableContent td {
+    padding: 6px 3px;
+    font-size: 10px;
+  }
+  
+  .tableContent td {
+    max-width: 120px;
+  }
+  
+  /* Make table horizontally scrollable on smaller screens */
+  .tableContent {
+    overflow-x: auto;
+  }
+  
+  .tableContent table {
+    min-width: 800px;
+  }
+}
+
+/* Medium Laptop (768px - 1023px) */
+@media (max-width: 1023px) {
+  .modalContent {
+    padding: 0.6rem;
+    gap: 0.8vh;
+  }
+  
+  .header-section {
+    padding: 0.6rem;
+  }
+  
+  .modalViewComponent {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  .tableContent {
+    max-height: 40vh;
+    font-size: 9px;
+  }
+  
+  .tableContent table {
+    min-width: 600px;
+  }
+  
+  .tableContent th {
+    padding: 6px 2px;
+    font-size: 9px;
+  }
+  
+  .tableContent td {
+    padding: 4px 2px;
+    max-width: 100px;
+    font-size: 9px;
+  }
+  
+  .titleReport {
+    font-size: 1.2rem;
+  }
+  
+  .titleReport_date {
+    font-size: 0.85rem;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES FOR BETTER STYLING
+   ======================================== */
+
+/* Enhanced Visual Effects */
+.modal-glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.table-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading States */
+.skeleton-loader {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Interactive Elements */
+.interactive-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+/* Modern Button Styles */
+.modern-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.modern-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+/* Responsive Text */
+.responsive-text {
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+}
+
+/* Print Styles */
+@media print {
+  .modalContent {
+    padding: 0;
+    gap: 0;
+  }
+  
+  .header-section,
+  .paginationNbutton,
+  .btnSec {
+    display: none !important;
+  }
+  
+  .tableContent {
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  
+  .tableContent table {
+    page-break-inside: auto;
+  }
+  
+  .tableContent tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+}
+
+
+
+
+here using my css file make my react modal page responsive  for desktop approach now only give me react component page because i have a css file refer my css file and do changes neded in component and give modal.js file dont do any changes in css and also dont write it again just give component file also in components just give me a return part not logic
+
+
+
+return (
+  <>
+    <Modal
+      centered
+      open={modalOpen}
+      footer={null}
+      title={null}
+      width="95%"
+      style={{ maxWidth: '1400px' }}
+      closeIcon={fullDataToDownloadLoader ? false : true}
+      maskClosable={false}
+      onCancel={() => { setModalOpen(false); }}
+      className="responsive-modal"
+    >
+      <ToastContainer />
+      <div className="modalContent">
+        <div className="modalContentsModule">
+          <div className="header-section">
+            <div className="modalViewComponent">
+              <FormControl sx={{ minWidth: 200 }} size="small" className="responsive-form-control">
+                <InputLabel style={{ height: "32px", paddingRight: "10px", paddingBottom: "10px", fontSize: "12px" }}>
+                  {fileNameToSend}
+                </InputLabel>
+                <AntSelect
+                  label={fileNameToSend}
+                  open={isOpen}
+                  onOpen={handleToggle}
+                  onClose={handleToggle}
+                  MenuProps={{ PaperProps: { style: { width: '100%', maxWidth: 250 } } }}
+                  style={{ height: 32, width: '100%' }}
+                  className="responsive-select"
+                >
+                  <TextField
+                    placeholder="Select Column Name"
+                    fullWidth
+                    InputProps={{ style: { height: 25 } }}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    value={searchTerm}
+                  />
+                  <MenuItem className="fileModalCheckbox" onClick={(e) => e.stopPropagation()}>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <CheckboxComponent
+                        columns={filteredColumns}
+                        checkedColumns={checkedColumns}
+                        handleCheckboxChange={handleCheckboxChange}
+                        onClick={handleCheckboxClick}
+                      />
+                    </div>
+                  </MenuItem>
+                </AntSelect>
+              </FormControl>
+
+              <FormControl sx={{ minWidth: 150, height: 32 }} size="small" className="responsive-form-control">
+                <Select
+                  style={{
+                    width: '100%',
+                    minWidth: 150,
+                    height: 32,
+                    fontSize: "12px",
+                    borderRadius: "0.4rem",
+                    borderBottomRightRadius: "0rem",
+                    borderTopRightRadius: "0rem",
+                  }}
+                  mode="single"
+                  showSearch
+                  placeholder="Click to Select Column"
+                  onChange={handleChangeDropdown}
+                  filterOption={filterOption}
+                  options={columnOPTIONS}
+                  className="responsive-select"
+                />
+              </FormControl>
+
+              <FormControl sx={{ minWidth: 150, height: 32 }} size="small" className="responsive-form-control">
+                <Input
+                  style={{ width: '100%', minWidth: 150, height: 32, borderRadius: "0.4rem" }}
+                  placeholder="Enter text to search"
+                  onChange={handleAllTextSearch}
+                  className="responsive-input"
+                />
+              </FormControl>
+
+              <FormControl sx={{ minWidth: 150, height: 32 }} size="small" className="responsive-form-control">
+                <RangePicker
+                  className="bg-transparent responsive-date-picker"
+                  style={{ width: '100%', minWidth: 150 }}
+                  onChange={handleDateChange}
+                  disabledDate={(current) => disableDate(current)}
+                />
+              </FormControl>
+            </div>
+            <div className="date-count">
+              <p className="titleReport_date">Refresh on: {dateFromFile}</p>
+              <p className="titleReport_date">Count: {numRows}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="headerContent"></div>
+        
+        {file_Modal_Loader ? (
+          <div className="loader-section">
+            <ThreeDots height="200" width="150" radius="9" color="#4fa94d" ariaLabel="three-dots-loading" visible={true} />
+            <p className="loader-text">Please Wait, Data is loading...</p>
+          </div>
+        ) : (
+          <div className="tableContent table-shadow">
+            {accessGranted ? (
+              <TableFile 
+                data={pdata} 
+                searchTextValue={valueSearchText} 
+                SearchTextData={handleSearchText} 
+                searchColumn={selectedSearchColumn} 
+                endDateTable={endDateTable} 
+              />
+            ) : (
+              <div className="accessDeniedMessage">
+                {noData ? (
+                  <p className="titleReport responsive-text">
+                    {noDataError ? `NO Data Found...` : `Hmm...something seems to have gone wrong.`}
+                  </p>
+                ) : (
+                  <p className="titleReport responsive-text">You don't have access to this data.</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+        
+        <div className="paginationNbutton">
+          <div className="pagination-container">
+            {numRows > 0 && (
+              <div className="paginationNbuttonModal">
+                <div className="rows-per-page">
+                  <div className="rows-text">Rows per Page: {pageSize}</div>
+                  <Stack spacing={1}>
+                    <Pagination count={Math.ceil(numRows / pageSize)} page={page} onChange={handleChange} />
+                  </Stack>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {sessionStorage.getItem('userDownload') === '1' && (
+            <div className="btnSec">
+              {fullDataToDownloadLoader ? (
+                <div className="downloading-section">
+                  <p>Downloading...</p>
+                  <Box sx={{ width: '35%', height: "25px", position: "relative", alignSelf: "center", paddingTop: "5px" }}>
+                    <LinearProgress />
+                  </Box>
+                  <div className="cancel-btn interactive-hover">
+                    <IoMdClose fill="red" size={15} onClick={cancelDownload} />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <Button
+                    id="download-button"
+                    aria-controls={anchorEl ? 'download-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={anchorEl ? 'true' : undefined}
+                    onClick={handleClick}
+                    variant="contained"
+                    endIcon={<ArrowDropDownIcon />}
+                    className="modern-button interactive-hover"
+                    style={{ color: 'black', backgroundColor: '#e5e5ea', minWidth: '120px' }}
+                  >
+                    Download
+                  </Button>
+                  <Menu
+                    id="download-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'download-button',
+                    }}
+                    PaperProps={{
+                      style: {
+                        maxHeight: '80vh',
+                        width: 'auto',
+                        minWidth: '200px'
+                      }
+                    }}
+                  >
+                    <MenuItem onClick={(event) => handleSubMenuClick(event, 'currentPage')}>
+                      Current Page Download
+                    </MenuItem>
+                    <Menu
+                      id="current-page-menu"
+                      anchorEl={subMenuAnchorEl}
+                      open={currentSubMenu === 'currentPage' && Boolean(subMenuAnchorEl)}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'current-page-menu',
+                      }}
+                    >
+                      <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Ccsv'); }}> CSV</MenuItem>
+                      <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Cxlsx'); }}> XLSX</MenuItem>
+                      <MenuItem onClick={handleSubMenuClick2}>TEXT</MenuItem>
+                      <Menu
+                        id="text-menu"
+                        anchorEl={subMenuAnchorEl2}
+                        open={Boolean(subMenuAnchorEl2)}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'text-menu',
+                        }}
+                      >
+                        <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Chtxt'); }}>With Header</MenuItem>
+                        <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Ctxt'); }}>Without Header</MenuItem>
+                      </Menu>
+                    </MenuItem>
+                    <MenuItem onClick={(event) => handleSubMenuClick(event, 'fullFile')}>
+                      {searchTextForFilter !== '' ? 'Filter Full Data Download' : 'Full File Download'}
+                    </MenuItem>
+                    <Menu
+                      id="full-file-menu"
+                      anchorEl={subMenuAnchorEl}
+                      open={currentSubMenu === 'fullFile' && Boolean(subMenuAnchorEl)}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'full-file-menu',
+                      }}
+                    >
+                      <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Fcsv'); }}>CSV</MenuItem>
+                      <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Fxlsx'); }}>XLSX</MenuItem>
+                      <MenuItem onClick={handleSubMenuClick2}>TEXT</MenuItem>
+                      <Menu
+                        id="text-menu"
+                        anchorEl={subMenuAnchorEl2}
+                        open={Boolean(subMenuAnchorEl2)}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'text-menu',
+                        }}
+                      >
+                        <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Ftxt'); }}>with Header</MenuItem>
+                        <MenuItem onClick={(event) => { event.preventDefault(); handleFileDownload('Fhtxt'); }}>without Header</MenuItem>
+                      </Menu>
+                    </Menu>
+                  </Menu>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+        
+        <Modal
+          centered
+          open={showConsentForm}
+          footer={null}
+          title={null}
+          width="90%"
+          style={{ maxWidth: '600px' }}
+          closeIcon={!fullDataToDownloadLoader}
+          maskClosable={false}
+          onCancel={handleConsentFormClose}
+          className="consent-modal"
+        >
+          <div className="consent-form">
+            <h3>Terms and Conditions</h3>
+            <p style={{ color: 'red' }}>
+              1. It is the responsibility of the concerned Business Users to validate the downloaded data. <br />
+              2. The data located in the specified folder is restricted exclusively to the team members associated with given permission. <br />
+              3. Any data downloaded from the specified folder will result in a transfer of ownership to the downloading team. <br />
+              4. Users need to make sure to download within given timelines. <br />
+              5. Any SR raised for data sets, service timeline is 7 working days.
+            </p>
+            <div style={{ margin: '1rem 0' }}>
+              <Input type='checkbox' id='agree' checked={isChecked} onChange={handleConsentBoxChange} />&nbsp;
+              <label htmlFor='agree'> I Agree </label>
+            </div>
+            
+            {isChecked && fileDownloadRequest && fileDownloadRequest.startsWith("F") && (
+              <div style={{ margin: '1rem 0' }}>
+                <p>Rows Per Sheet:</p>
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={16} md={12}>
+                    <Slider 
+                      min={1} 
+                      max={numRows} 
+                      onChange={onChange} 
+                      value={typeof inputValue === 'number' ? inputValue : 0} 
+                    />
+                  </Col>
+                  <Col xs={24} sm={8} md={4}>
+                    <InputNumber 
+                      min={1} 
+                      max={numRows} 
+                      style={{ width: '100%' }} 
+                      value={inputValue} 
+                      onChange={onChange} 
+                    />
+                  </Col>
+                </Row>
+              </div>
+            )}
+            
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '1.5rem' }}>
+              <Button 
+                variant="outlined" 
+                onClick={handleConsentFormSubmit} 
+                disabled={!isChecked || isSubmitting} 
+                className="modern-button"
+                style={{ minWidth: '75px' }}
+              >
+                {isSubmitting ? "Submitting..." : "OK"}
+              </Button>
+              <Button 
+                variant="outlined" 
+                onClick={handleConsentFormClose} 
+                disabled={isSubmitting} 
+                style={{ minWidth: '75px' }}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      </div>
+    </Modal>
+  </>
+);
