@@ -4148,11 +4148,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\DotNetSalunkhe\\MVCWebsites\\Task1\\Task1.csproj",
+      "projectUniqueName": "D:\\Dbnix\\Gitwork\\Dbnix2\\Task1\\Task1.csproj",
       "projectName": "Task1",
-      "projectPath": "D:\\DotNetSalunkhe\\MVCWebsites\\Task1\\Task1.csproj",
+      "projectPath": "D:\\Dbnix\\Gitwork\\Dbnix2\\Task1\\Task1.csproj",
       "packagesPath": "C:\\Users\\harsh\\.nuget\\packages\\",
-      "outputPath": "D:\\DotNetSalunkhe\\MVCWebsites\\Task1\\obj\\",
+      "outputPath": "D:\\Dbnix\\Gitwork\\Dbnix2\\Task1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\harsh\\AppData\\Roaming\\NuGet\\NuGet.Config",
