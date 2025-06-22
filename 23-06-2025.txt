@@ -1,83 +1,83 @@
+import { Select as AntSelect, FormControl, InputLabel, Menu, MenuItem, Button, TextField } from '@mui/material';
 import { Col, InputNumber, Modal, Row, Slider, Select, Input, DatePicker } from 'antd';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import './FileModal.css';
+import { ToastContainer, toast } from 'react-toastify';
+import Statecontext from '../screens/Statecontext';
+import moment from 'moment/moment';
 import axios from 'axios';
-import TableFile from './Tablefile/Tablefile';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
-import StateContext from '../../../context/StateContext';
-import Dropdown from 'rsuite/Dropdown';
-import 'rsuite/dist/rsuite.min.css';
 import { ThreeDots } from 'react-loader-spinner';
+import CheckboxComponent from '../screens/CheckboxComponent';
+import TableFile from '../screens/Table';
+import './FileModal1.css';
+// import Stack from '@mui/material/Stack';
+import Stack from '@mui/material/Stack';
+import Pagination from '@mui/material/Pagination';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-import { ToastContainer, toast } from 'react-toastify';
 import { IoMdClose } from 'react-icons/io';
-import { Select as AntSelect, FormControl, InputLabel, Menu, MenuItem, Button } from '@mui/material';
-import CheckboxComponent from './CheckboxComponent';
-import { isAfter, startOfDay, subDays } from 'date-fns';
-import TextField from '@mui/material/TextField';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
-import moment from 'moment';
+
+
+
+
+
+
+
 
 const { RangePicker } = DatePicker;
 
-const FileModal = (props) => {
-  const { modalOpen, setModalOpen } = props;
-  const { fileNameToSend, apiBaseUrl, setLogoutTimers, folderName, userSubResult, checkedColumns, setCheckedColumns } = useContext(StateContext);
-  const [pdata, setPdata] = useState([{}]);
-  const [searchPdata, setSearchPdata] = useState([{}]);
-  const [checkedColumnOption, setCheckedColumnOption] = useState([]);
-  const [fullDataToDownloadLoader, setFullDataToDownloadLoader] = useState(false);
-  const [page, setPage] = useState(1);
-  const [pageFilter, setPageFilter] = useState(1);
-  const [numRows, setNumRows] = useState(1);
-  const [accessGranted, setAccessGranted] = useState(true);
-  const [file_Modal_Loader, setFile_modal_Loader] = useState(false);
-  const [sortColumn, setSortColumn] = useState('');
-  const [sortOrder, setSortOrder] = useState('');
-  const [noData, setNoData] = useState(false);
-  const [noDataError, setNoDataError] = useState(false);
-  const [dateFromFile, setDateFromFile] = useState(null);
-  const [maxRowsPerSheet, setMaxRowsPerSheet] = useState(700000);
-  const userId = sessionStorage.getItem('userId');
-  const [cancelTokenSource, setCancelTokenSource] = useState(null);
-  const [startDateTable, setStartDate] = useState(null);
-  const [endDateTable, setEndDate] = useState(null);
-  const [selectedItems, setSelectedItems] = useState();
-  const [pageWithDate, setPageWithDate] = useState(false);
-  const [OPTIONS, setOPTIONS] = useState([]);
-  const [columnOPTIONS, setColumnOPTIONS] = useState([]);
-  const [searchTextForFilter, setSearchTextForFilter] = useState('');
-  const [dropdownSelectedColumn, setDropdownSelectedColumn] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showConsentForm, setShowConsentForm] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fileDownloadRequest, setFileDownloadRequest] = useState(null);
-  const [downloadFileName, setDownloadFileName] = useState();
-  const [columns, setColumns] = useState([]);
-  const [dropdownSelectedColumnsFormCheckBox, setDropdownSelectedColumnsFormCheckBox] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
-  const [subMenuAnchorEl2, setSubMenuAnchorEl2] = useState(null);
-  const [currentSubMenu, setCurrentSubMenu] = useState('');
-  const [inputValue, setInputValue] = useState(700000);
-  const [valueSearchText, setValueSearchText] = useState('');
-  const [selectedSearchColumn, setSelectedSearchColumn] = useState('');
+const FileModal1 = () =>  {
+     
+        // const [pdata, setPdata] = useState([{}]);      
+  const { fileNameToSend,apiBaseUrl, setLogoutTimers, folderName, userSubResult, checkedColumns, setCheckedColumns } = useContext(Statecontext);
+        const [fullDataToDownloadLoader, setFullDataToDownloadLoader] = useState(false);
+        const [datefromfile,setDatefomFile] = useState(null);
+        const [maxRowsPerSheet, setMaxRowsPerSheet] = useState(700000);
+        const [startDateTable, setStartDate] = useState(null);
+        const [pageWithDate, setPageWithDate] = useState(false);
+        const [searchPdata, setSearchPdata] = useState([{}]);
+        const [accessGranted, setAccessGranted] = useState(true);
+        const [file_modal_Loader, setFile_modal_Loader] = useState(false);
+        const [noDataError, setNoDataError] = useState(false);
+        const [searchTerm, setSearchTerm] = useState('');
+        const [noData, setNoData] = useState(false);
+        const [dateFromFile, setDateFromFile] = useState(null);
+        const [OPTIONS, setOPTIONS] = useState([]);
+        const [columnOPTIONS, setColumnOPTIONS] = useState([]);
+        const [searchTextForFilter, setSearchTextForFilter] = useState('');
+        const [page, setPage] = useState(1);
+        const [numRows, setNumRows] = useState(1);
+        const [endDateTable, setEndDate] = useState(null);
+        const [isChecked, setIsChecked] = useState(false);
+        const [selectedItems, setSelectedItems] = useState();
+        const [valueSearchText, setValueSearchText] = useState('');
+        const [selectedSearchColumn, setSelectedSearchColumn] = useState('');
+        const [dropdownSelectedColumn, setDropdownSelectedColumn] = useState('');
+        const [isSubmitting, setIsSubmitting] = useState(false);
+        const [fileDownloadRequest, setFileDownloadRequest] = useState(null);
+        const userId = sessionStorage.getItem('userId');
+        const [cancelTokenSource, setCancelTokenSource] = useState(null);
+        const [inputValue, setInputValue] = useState(700000);
+        const [anchorEl, setAnchorEl] = useState(null);
+        const [isOpen, setIsOpen] = useState(false);
+        const [showConsentForm, setShowConsentForm] = useState(false);
+        const [columns, setColumns] = useState([]);
+        const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
+        const [currentSubMenu, setCurrentSubMenu] = useState('');
+        const [downloadFileName, setDownloadFileName] = useState();
+        const [subMenuAnchorEl2, setSubMenuAnchorEl2] = useState(null);
 
-  const userRole = sessionStorage.getItem("userRole") || "";
-  const token = sessionStorage.getItem("token");
-  const pageSize = 100;
+        const userRole = sessionStorage.getItem("userRole") || "";
+        const pageSize = 100;
+        const userDownload = sessionStorage.getItem("userDownload")
 
-  // Responsive note: You can adjust the modal width via CSS media queries or inline style.
-  // For example, we could pass style={{ width: '95%' }} on small screens.
-  // (See FileModal.css for media queries.)
 
-  const onChange = (newValue) => {
+        const from = moment(datefromfile);
+
+
+      const onChange = (newValue) => {
     if (newValue < 0) {
       setInputValue(1);
     } else {
@@ -85,17 +85,16 @@ const FileModal = (props) => {
     }
   };
 
-  const handleClick = (event) => {
+        const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleClose = () => {
+         const handleClose = () => {
     setAnchorEl(null);
     setSubMenuAnchorEl(null);
     setCurrentSubMenu('');
   };
 
-  const handleSubMenuClick = (event, subMenu) => {
+   const handleSubMenuClick = (event, subMenu) => {
     setCurrentSubMenu(subMenu);
     setSubMenuAnchorEl(event.currentTarget);
   };
@@ -104,41 +103,61 @@ const FileModal = (props) => {
     setSubMenuAnchorEl2(event.currentTarget);
   };
 
-  const handleToggle = () => {
+
+   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleCheckboxClick = (e) => {
+      const disableDate = (current) => {
+        if (userRole === 'User ') {
+            if (from) {
+                const minDate = from.clone().add(-3, 'days');
+                return (
+                    current.isAfter(from, "day") || 
+                    current.isBefore(minDate, "day")
+
+                    );
+            }
+        } else {
+            return current.isAfter(from, "day");
+        }
+        return false;
+    };
+
+    const handleCheckboxClick = (e) => {
     // Optional: prevent event propagation if needed
   };
 
-  const from = moment(dateFromFile);
-
-  const disableDate = (current) => {
-    if (userRole === 'User ') {
-      if (from) {
-        const minDate = from.clone().add(-3, 'days');
-        return current.isAfter(from, "day") || current.isBefore(minDate, "day");
-      }
-    } else {
-      return current.isAfter(from, "day");
-    }
-    return false;
+  const handleConsentFormClose = () => {
+    setShowConsentForm(false);
+    setFileDownloadRequest(null);
+    setIsChecked(false);
   };
 
+   const handleConsentBoxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
+
+
+
   const handleDateChange = (dates) => {
-    if (dates && dates.length >= 2) {
-      // Responsive note: The date format calculation remains unchanged.
-      const [day, month, year] = dateFromFile.split('/').map(Number);
+         if (dates && dates.length >= 2) {
+
+      const [day, month, year] = datefromfile.split('/').map(Number);
+      
       const formatted_Date = new Date(year, month - 1, day);
-      const maxBusinessDate = new Date(Date.parse(formatted_Date));
+      const maxBusinessDateStr = formatted_Date;
+      const maxBusinessDate = new Date(Date.parse(maxBusinessDateStr));
+
       const startDateLimit = new Date(maxBusinessDate);
       startDateLimit.setDate(startDateLimit.getDate() - 4);
+
       const endDateLimit = new Date(maxBusinessDate);
       endDateLimit.setDate(endDateLimit.getDate() + 1);
 
       let sdate = new Date(dates[0]);
       sdate.setDate(sdate.getDate() + 1);
+
       let edate = new Date(dates[1]);
       edate.setDate(edate.getDate() + 1);
 
@@ -146,16 +165,19 @@ const FileModal = (props) => {
         if (edate > endDateLimit) {
           toast.error("End Date is Out of Permitted Range...", { theme: "colored" });
           setPageWithDate(false);
-        } else if (sdate < startDateLimit) {
+        } 
+        else if (sdate < startDateLimit) {
           toast.error("Start Date is Out of Permitted Range...", { theme: "colored" });
           setPageWithDate(false);
-        } else {
+        } 
+        else {
           setStartDate(sdate.toISOString().split('T')[0]);
-          fetchContentInFilesWithDate(fileNameToSend, page);
+          fetchContentInFilesWithDate(fileNameToSend, page, sdate.toISOString().split('T')[0], edate.toISOString().split('T')[0]);
         }
-      } else {
+      } 
+      else {
         setStartDate(sdate.toISOString().split('T')[0]);
-        fetchContentInFilesWithDate(fileNameToSend, page);
+        fetchContentInFilesWithDate(fileNameToSend, page, sdate.toISOString().split('T')[0], edate.toISOString().split('T')[0]);
       }
       setEndDate(edate ? edate.toISOString().split('T')[0] : '');
     } else {
@@ -165,14 +187,113 @@ const FileModal = (props) => {
     }
   };
 
-  const fetchContentInFilesWithDate = async (e, newPage) => {
+  
+  const cleanupAfterCancel = () => {
+    setCancelTokenSource(null);
+    setFullDataToDownloadLoader(false);
+  };
+
+  const cancelDownload = () => {
+    if (cancelTokenSource) {
+      cancelTokenSource.cancel('Download canceled');
+      sessionStorage.setItem("process", false);
+      cleanupAfterCancel();
+    }
+  };
+
+
+  const fetchContentInFiles = async (e, newPage) => {
+
     setFile_modal_Loader(true);
+
     if (valueSearchText.trim() !== '') {
-      handleSearchText(newPage, selectedSearchColumn, valueSearchText);
+      handleSearchText(newPage, selectedSearchColumn, valueSearchText)
     } else {
+
+      try {
+        const getContentInFilesApiUrl = `${apiBaseUrl}api/ReportModules/getModalData`;
+        const urlForApi = getContentInFilesApiUrl;
+        const filesResponse = await axios.post(urlForApi, 
+          {
+            username: userId,
+            folderName: folderName,
+            filename: e,
+            ColumnName: checkedColumns.length > 0 ? checkedColumns : ["*"],
+            pageSize: pageSize,
+            pageNo: newPage,
+          }, 
+          { withCredentials: true,
+            headers : {
+              Authorization : `Bearer ${sessionStorage.getItem("token")}`
+            },
+           });
+
+           if(filesResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", filesResponse.headers['X-New-JWT-Token'])
+           }
+
+        if (filesResponse.data === "You don't have access to this data") {
+          setAccessGranted(false);
+          setFile_modal_Loader(false);
+        } 
+        else if (filesResponse.data === "No Data Found" || filesResponse.data.totalCount === 0) {
+          setNoData(true);
+          setAccessGranted(false);
+          setFile_modal_Loader(false);
+        } else {
+          
+          const pro = filesResponse.data.data;
+          setPdata(pro);
+          setSearchPdata(pro);
+          const convertedArray = Object.keys(pro[0]).map(item => ({
+            value: item,
+            label:item,
+          }));
+          setOPTIONS(convertedArray)
+          setColumnOPTIONS(convertedArray)
+          setSearchPdata(pro);
+          setNumRows(filesResponse.data.totalCount);
+          setAccessGranted(true);
+          setPage(newPage);
+          setFile_modal_Loader(false);
+        }
+      } catch (error) {
+        setPageWithDate(false);
+        if (error.response && (error.response.status === 404 || error.response.status === 500)) {
+          setNoData(true);
+          setAccessGranted(false);
+          setNoDataError(true);
+        }
+
+        if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
+        console.error("Error fetching files:", error);
+        setFile_modal_Loader(false);
+      }
+    }
+  };
+
+
+  const fetchContentInFilesWithDate = async (e, newPage, start , end) => {
+
+    setFile_modal_Loader(true);
+
+    if (valueSearchText !== '') {
+      handleSearchText(newPage, selectedSearchColumn, valueSearchText)
+    } else {
+
       try {
         const getContentInFilesApiUrl = `${apiBaseUrl}api/ReportModules/getModalDataWithDate`;
-        const filesResponse = await axios.post(getContentInFilesApiUrl, 
+        const urlForApi = getContentInFilesApiUrl
+        const filesResponse = await axios.post(urlForApi, 
           {
             username: userId,
             filename: fileNameToSend,
@@ -180,15 +301,25 @@ const FileModal = (props) => {
             checkedColumnName: checkedColumns.length > 0 ? checkedColumns : ["*"],
             pagesize: pageSize,
             pagenumber: newPage,
-            startDate: startDateTable,
-            endDate: endDateTable,
-          }, { withCredentials: true });
+            startDate: start,
+            endDate: end,
+          }, 
+          { withCredentials: true,
+            headers : {
+              Authorization : `Bearer ${sessionStorage.getItem("token")}`
+            },
+           });
+
+           if(filesResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", filesResponse.headers['X-New-JWT-Token'])
+           }
 
         if (filesResponse.data === "You don't have access to this data") {
           setAccessGranted(false);
           setFile_modal_Loader(false);
           setPageWithDate(false);
-        } else if (filesResponse.data === "No Data Found" || filesResponse.data.totalCount === 0) {
+        } 
+        else if (filesResponse.data === "No Data Found" || filesResponse.data.totalCount === 0) {
           setNoData(true);
           setAccessGranted(false);
           setFile_modal_Loader(false);
@@ -210,22 +341,41 @@ const FileModal = (props) => {
           setAccessGranted(false);
           setNoDataError(true);
         }
+
+        if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
         console.error("Error fetching files:", error);
         setFile_modal_Loader(false);
       }
     }
   };
 
+
   useEffect(() => {
     fetchColumns();
   }, []);
 
+  useEffect(() =>{}, [setSearchTerm])
+
   useEffect(() => {
     // Responsive note: This effect will refresh data on changes. You may consider debouncing heavy API calls.
-    console.log("fileNameTosend", fileNameToSend);
     fetchContentInFiles(fileNameToSend, page);
     fetchMaxDate();
-  }, [searchTextForFilter, setCheckedColumns, checkedColumns]);
+  }, [searchTextForFilter,
+    setValueSearchText,
+    setSearchTextForFilter,
+    checkedColumns,
+    setSelectedSearchColumn,
+    setInputValue
+  ]);
 
   const handleChange = (event, value) => {
     if (checkedColumns.length > 0) {
@@ -233,7 +383,7 @@ const FileModal = (props) => {
     } else if (pageWithDate === false) {
       fetchContentInFiles(fileNameToSend, value);
     } else {
-      fetchContentInFilesWithDate(fileNameToSend, value);
+      fetchContentInFilesWithDate(fileNameToSend, value, startDateTable, endDateTable);
     }
   };
 
@@ -261,9 +411,16 @@ const FileModal = (props) => {
           maxRowsPerSheet: maxRowsPerSheet,
         }, {
           withCredentials: true,
+          headers : {
+              Authorization : `Bearer ${sessionStorage.getItem("token")}`
+            },
           responseType: 'blob',
           cancelToken: source.token,
         });
+        
+        if(filesResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", filesResponse.headers['X-New-JWT-Token'])
+           }
 
         if (filesResponse.status === 200) {
           const blob = new Blob([filesResponse.data], { type: filesResponse.headers['content-type'] });
@@ -298,6 +455,9 @@ const FileModal = (props) => {
             'Content-Type': 'application/json',
           },
           withCredentials: true,
+          headers : {
+              Authorization : `Bearer ${sessionStorage.getItem("token")}`
+            },
           responseType: 'blob',
           cancelToken: source.token,
         });
@@ -326,40 +486,30 @@ const FileModal = (props) => {
         setLogoutTimers(5);
         setFullDataToDownloadLoader(false);
       } else {
-        console.error("Error fetching files:", error);
+        console.error("Error fetching files in the folder:", error);
         toast.error("Something went wrong...", { theme: "colored" });
         setLogoutTimers(5);
         setFullDataToDownloadLoader(false);
       }
       setLogoutTimers(5);
       setFullDataToDownloadLoader(false);
+
+      if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
     } finally {
       sessionStorage.setItem("process", false);
     }
   };
 
-  const cleanupAfterCancel = () => {
-    setCancelTokenSource(null);
-    setFullDataToDownloadLoader(false);
-  };
 
-  const cancelDownload = () => {
-    if (cancelTokenSource) {
-      cancelTokenSource.cancel('Download canceled');
-      sessionStorage.setItem("process", false);
-      cleanupAfterCancel();
-    }
-  };
-
-  const handleConsentBoxChange = (e) => {
-    setIsChecked(e.target.checked);
-  };
-
-  const handleConsentFormClose = () => {
-    setShowConsentForm(false);
-    setFileDownloadRequest(null);
-    setIsChecked(false);
-  };
 
   const consentUpdate = async () => {
     const consentDetails = {
@@ -375,15 +525,32 @@ const FileModal = (props) => {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`
         },
       });
+
+      if(response.headers["X-New-JWT-Token"]){
+        sessionStorage.setItem("token", response.headers['X-New-JWT-Token'])
+      }
       if (response.status === 200) {
         console.error("API ERROR", response);
       }
     } catch (error) {
+
+      if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
       console.error("The API error is", error);
     }
   };
+
 
   const handleConsentFormSubmit = async () => {
     if (fileDownloadRequest) {
@@ -393,14 +560,14 @@ const FileModal = (props) => {
     }
   };
 
-  const handleFileDownload = (type) => {
+    const handleFileDownload = (type) => {
     handleClose();
     setFileDownloadRequest(type);
     setShowConsentForm(true);
     if (startDateTable !== null && endDateTable !== null) {
       setDownloadFileName(fileNameToSend + '(' + startDateTable.toString() + '_' + endDateTable.toString() + ')');
     } else {
-      setDownloadFileName(fileNameToSend + '(' + dateFromFile.toString() + ')');
+      setDownloadFileName(fileNameToSend + '(' + datefromfile.toString() + ')');
     }
   };
 
@@ -464,14 +631,14 @@ const FileModal = (props) => {
       sessionStorage.setItem("process", false);
     }
     // Additional catch block to ensure fullDataToDownloadLoader is reset
-    try {
-    } catch (error) {
-      console.error("Error during file download:", error);
-      toast.error("Something went wrong during the download...", { theme: "colored" });
-    } finally {
-      setFullDataToDownloadLoader(false);
-      sessionStorage.setItem("process", false);
-    }
+    // try {
+    // } catch (error) {
+    //   console.error("Error during file download:", error);
+    //   toast.error("Something went wrong during the download...", { theme: "colored" });
+    // } finally {
+    //   setFullDataToDownloadLoader(false);
+    //   sessionStorage.setItem("process", false);
+    // }
   };
 
   const convertToText = (data) => {
@@ -509,6 +676,7 @@ const FileModal = (props) => {
     return [separator, ...rows].join('\n');
   };
 
+
   const sendEmail = async () => {
     const mailDataToSend = {
       "to": [userId],
@@ -524,19 +692,34 @@ const FileModal = (props) => {
 
     try {
       const apiToFetch = `${apiBaseUrl}api/Email/SendEmail`;
-      const response = await axios.post(apiToFetch, mailDataToSend, {
+      const filesResponse = await axios.post(apiToFetch, mailDataToSend, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`
         },
       });
 
-      if (response.status === 200) {
+      if(filesResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", filesResponse.headers['X-New-JWT-Token'])
+           }
+
+      if (filesResponse.status === 200) {
         // Email sent successfully
       } else {
-        console.error("API ERROR", response)
+        console.error("API ERROR", filesResponse)
       }
     } catch (error) {
+       if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
       console.error("The API Error is", error);
     }
   };
@@ -550,24 +733,36 @@ const FileModal = (props) => {
 
     try {
       const apiToFetch = `${apiBaseUrl}api/UsersLogs/UserAction`;
-      const response = await axios.post(apiToFetch, mailDataToSend, {
+      const filesResponse = await axios.post(apiToFetch, mailDataToSend, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
+           Authorization: `Bearer ${sessionStorage.getItem("token")}`
         },
       });
 
-      if (response.status === 200) {
+      if(filesResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", filesResponse.headers['X-New-JWT-Token'])
+           }
+
+      if (filesResponse.status === 200) {
       } else {
-        console.error("API ERROR", response);
+        console.error("API ERROR", filesResponse);
       }
     } catch (error) {
+
+       if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
       console.error("The API error", error);
     }
-  };
-
-  const handleSort = (numRows) => {
-    setNumRows(numRows);
   };
 
   const debounce = (func, delay) => {
@@ -578,11 +773,13 @@ const FileModal = (props) => {
     };
   };
 
-  const debouncedSearchTextData = useCallback(debounce((page, column, searchText) => {
+
+   const debouncedSearchTextData = useCallback(debounce((page, column, searchText) => {
     handleSearchText(page, column, searchText);
   }, 1000), []);
 
-  const handleAllTextSearch = (e) => {
+
+    const handleAllTextSearch = (e) => {
     const searchValueText = e.target.value;
     console.log("search text", searchValueText);
     setSearchTextForFilter(searchValueText);
@@ -611,12 +808,21 @@ const FileModal = (props) => {
         pageNumber: newPage,
         startDate: startDateTable,
         endDate: endDateTable,
-      }, { withCredentials: true });
+      }, { withCredentials: true ,
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        }
+      });
+
+      if(filesResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", filesResponse.headers['X-New-JWT-Token'])
+           }
 
       if (filesResponse.data === "You don't have access to this data") {
         setAccessGranted(false);
         setFile_modal_Loader(false);
-      } else if (filesResponse.data === "No Data Found" || filesResponse.data.totalCount === 0) {
+      }
+       else if (filesResponse.data === "No Data Found" || filesResponse.data.totalCount === 0) {
         setNoData(true);
         setAccessGranted(false);
         setFile_modal_Loader(false);
@@ -634,6 +840,18 @@ const FileModal = (props) => {
         setAccessGranted(false);
         setNoDataError(true);
       }
+        if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
+
+
       console.error("Error fetching filter data:", error);
       setFile_modal_Loader(false);
     }
@@ -645,13 +863,35 @@ const FileModal = (props) => {
     setDropdownSelectedColumn(label.value);
   };
 
-  const fetchMaxDate = async () => {
+    const fetchMaxDate = async () => {
     try {
-      const sortedDataResponse = await axios.get(`${apiBaseUrl}api/ReportModules/maxBusinessDate/${fileNameToSend}/${folderName}`, { withCredentials: true });
+      const sortedDataResponse = await axios.get(`${apiBaseUrl}api/ReportModules/maxBusinessDate/${fileNameToSend}/${folderName}`, { withCredentials: true,
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        }
+
+      });
+
+      if(sortedDataResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", sortedDataResponse.headers['X-New-JWT-Token'])
+           }
+
       setDateFromFile(sortedDataResponse.data.substring(0, 10));
       setStartDate(sortedDataResponse.data.substring(0, 10));
       setEndDate(sortedDataResponse.data.substring(0, 10));
     } catch (error) {
+
+      if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
+
       console.error("Error fetching sorted data:", error);
     }
   };
@@ -662,20 +902,52 @@ const FileModal = (props) => {
   let filterOptions = (input, option) => 
     (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
+
+
   const fetchColumns = async () => {
     try {
-      const response = await fetch(`${apiBaseUrl}api/ReportModules/GetFieldNamesAccordingToUser?username=${userId}&filename=${fileNameToSend}&foldername=${folderName}`);
+      const response = await fetch(`${apiBaseUrl}api/ReportModules/GetFieldNamesAccordingToUser?username=${userId}&filename=${fileNameToSend}&foldername=${folderName}`,
+        {
+         headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        },
+      }
+     );
+
+     if(response.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", response.headers['X-New-JWT-Token'])
+           }
+
+           if(!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+           }
+
       const data = await response.json();
       setColumns(data);
+
       const convertedArray = data.map(item => ({ value: item, label: item }));
       setColumnOPTIONS(convertedArray);
       setCheckedColumns(data);
     } catch (error) {
       console.error('Error fetching column names:', error);
-    }
-  };
 
-  const handleCheckboxChange = (event) => {
+      if(error.message.includes('401')) {
+        if(error.response.data === 'Unauthorized: Token is expired') {
+             toast.error("Session expired", {theme: "colored"})
+        } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          };
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
+        else{
+
+        }
+      }
+    };
+
+     const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     console.log("Checkbox value:", value);
     if (value === 'selectAll') {
@@ -695,14 +967,19 @@ const FileModal = (props) => {
 
   const filteredColumns = searchTerm ? columns.filter(column => column.toLowerCase().includes(searchTerm.toLowerCase())) : columns;
 
-  const fetchByColumnName = async (e, newPage) => {
+
+    const fetchByColumnName = async (e, newPage) => {
     setFile_modal_Loader(true);
+
     if (valueSearchText.trim() !== '') {
       handleSearchText(newPage, selectedSearchColumn, valueSearchText);
     } else {
+
       try {
         const getContentInFilesApiUrl = `${apiBaseUrl}api/ReportModules/GetDataFromTableByColumnName`;
+
         const urlForApi = getContentInFilesApiUrl;
+
         const filesResponse = await axios.post(urlForApi, {
           username: userId,
           filename: e,
@@ -710,7 +987,17 @@ const FileModal = (props) => {
           checkedColumns: checkedColumns,
           pagesize: pageSize,
           pagenumber: newPage,
-        }, { withCredentials: true });
+        }, 
+        { withCredentials: true,
+            headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        }
+         });
+
+         if(filesResponse.headers['X-New-JWT-Token']){
+            sessionStorage.setItem("token", filesResponse.headers['X-New-JWT-Token'])
+           }
+
 
         if (filesResponse.data === "You don't have access to this data") {
           setAccessGranted(false);
@@ -734,32 +1021,48 @@ const FileModal = (props) => {
           setAccessGranted(false);
           setNoDataError(true);
         }
+        if(error.response.status === 401) {
+          if(error.response.data === 'Unauthorized: Token is expired') {
+            toast.error("Session expired", {theme: "colored"})
+          } else {
+            toast.error("Already open in another Tab", {theme : "colored"});
+          }
+          sessionStorage.clear(); setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        }
+
         console.error("Error fetching files by column:", error);
         setFile_modal_Loader(false);
       }
     }
   };
 
+
   return (
-    <>
-      <Modal
-        centered
-        open={modalOpen}
-        footer={null}
-        title={null}
-        // Responsive change: width set via CSS; alternatively, inline style can be used (e.g., style={{ width: '95%' }})
-        width={"1200px"}
-        closeIcon={fullDataToDownloadLoader ? false : true}
-        maskClosable={false}
-        onCancel={() => { setModalOpen(false); }}
-      >
-        <ToastContainer />
-        <div className="modalContent">
-          <div className="modalContentsModule">
-            <div className="header-section">
-              <div className="modalViewComponent">
-                <FormControl sx={{ minWidth: 200 }} size="small">
-                  <InputLabel style={{ height: "32px", paddingRight: "10px", paddingBottom: "10px", fontSize: "12px" }}>
+        <>
+ <Modal
+      centered   //centered: Vertically centers the modal on the screen.
+    //   open={modalOpen}  //open={modalOpen}: Controls whether the modal is visible. true shows it, false hides it.
+    open={true}
+      footer={null}  //Removes the default OK/Cancel buttons from the bottom of the modal.
+      title={null}  //  Removes the default title header area from the top of the modal.
+      width="95%"
+      style={{ maxWidth: '1200px' }}
+      closeIcon={fullDataToDownloadLoader ? false : true}  //Hides the close (X) icon when a file is downloading (fullDataToDownloadLoader === true) to avoid accidental closing.
+      maskClosable={false}  //Prevents closing the modal by clicking outside it.
+    //   onCancel={() => { setModalOpen(false); }}   //Callback to run when the modal is closed. It sets modalOpen to false.
+    >
+    <ToastContainer />
+    <div className="modalContent">
+      <div className="modalContentsModule">
+        <div className="modalHeaderWrapper">
+          <div className="modalHeaderContent">
+            <div className='modalViewComponent'>
+            {/* check */}
+             
+              <FormControl sx={{ minWidth: 200 }} size="small">
+                  <InputLabel className="inputlabel">
                     {fileNameToSend}
                   </InputLabel>
                   <AntSelect
@@ -791,97 +1094,104 @@ const FileModal = (props) => {
                   </AntSelect>
                 </FormControl>
 
-                <FormControl sx={{ minWidth: 150, height: 32 }} size="small">
-                  <Select
-                    style={{
-                      width: 150,
-                      height: 32,
-                      fontSize: "12px",
-                      borderRadius: "0.4rem",
-                      borderBottomRightRadius: "0rem",
-                      borderTopRightRadius: "0rem",
-                    }}
-                    mode="single"
-                    showSearch
-                    placeholder="Click to Select Column"
-                    onChange={handleChangeDropdown}
-                    filterOption={filterOption}
-                    options={columnOPTIONS}
-                  />
-                </FormControl>
+               <FormControl className="selectColumnForm" size="small">
+  <Select
+    className="selectColumnDropdown"
+    mode="single"
+    showSearch
+    placeholder="Click to Select Column"
+    onChange={handleChangeDropdown}
+    filterOption={filterOption}
+    options={columnOPTIONS}
+  />
+</FormControl>
+{/* *********************************************************************************************************** */}
+<FormControl className="textSearchForm" size="small">
+  <Input
+    className="textSearchInput"
+    sx = {{
+      borderRadius: "0.4rem"
+    }}
+    placeholder="Enter text to search"
+    onChange={handleAllTextSearch}
+  />
+</FormControl>
 
-                <FormControl sx={{ minWidth: 150, height: 32 }} size="small">
-                  <Input
-                    width={150}
-                    height={32}
-                    sx={{ borderRadius: "0.4rem" }}
-                    placeholder="Enter text to search"
-                    onChange={handleAllTextSearch}
-                  />
-                </FormControl>
 
-                <FormControl sx={{ minWidth: 150, height: 32 }} size="small">
-                  <RangePicker
-                    className="bg-transparent"
-                    onChange={handleDateChange}
-                    disabledDate={(current) => disableDate(current)}
-                  />
-                </FormControl>
-              </div>
-              <div className="date-count">
+<FormControl className="dateRangeForm" size="small">
+  <RangePicker
+    className="bg-transparent"
+    onChange={handleDateChange}
+    disabledDate={disableDate}
+  />
+</FormControl>
+</div>
+<div>
                 <p className="titleReport_date">Refresh on: {dateFromFile}</p>
                 <p className="titleReport_date">Count: {numRows}</p>
               </div>
-            </div>
           </div>
-          <div className="headerContent"></div>
-          {file_Modal_Loader ? (
+        </div>
+        <div className="headerContent"></div>
+          {file_modal_Loader ? 
             <div className="loader-section">
               <ThreeDots height="200" width="150" radius="9" color="#4fa94d" ariaLabel="three-dots-loading" visible={true} />
               <p className="loader-text">Please Wait, Data is loading...</p>
             </div>
-          ) : (
+           :  
             <div className="tableContent">
               {accessGranted ? (
-                <TableFile data={pdata} searchTextValue={valueSearchText} SearchTextData={handleSearchText} searchColumn={selectedSearchColumn} endDateTable={endDateTable} />
+                <TableFile 
+                data={pdata} 
+                searchTextValue={valueSearchText} 
+                SearchTextData={handleSearchText} 
+                searchColumn={selectedSearchColumn} 
+                endDateTable={endDateTable} />
               ) : (
                 <div className="accessDeniedMessage">
-                  {noData ? (
+                  {noData === true ? 
                     <p className="titleReport">{noDataError ? `NO Data Found...` : `Hmm...something seems to have gone wrong.`}</p>
-                  ) : (
+                   : 
                     <p className="titleReport">You don't have access to this data.</p>
-                  )}
+                  }
                 </div>
               )}
             </div>
-          )}
+          }
+
           <div className="paginationNbutton">
             <div className="pagination-container">
               {numRows > 0 && (
                 <div className="paginationNbuttonModal">
                   <div className="rows-per-page">
+                    <div className="rows-per">
                     <div className="rows-text">Rows per Page: {pageSize}</div>
+                    <div>
                     <Stack spacing={1}>
                       <Pagination count={Math.ceil(numRows / pageSize)} page={page} onChange={handleChange} />
                     </Stack>
                   </div>
                 </div>
+                </div>
+                </div>
               )}
             </div>
-            {sessionStorage.getItem('userDownload') === '1' && (
+            {userDownload === '1' && 
               <div className="btnSec">
-                {fullDataToDownloadLoader ? (
+                {fullDataToDownloadLoader ? 
                   <div className="downloading-section">
+                    <div className = "downloading-sec">
                     <p>Downloading...</p>
-                    <Box sx={{ width: '35%', height: "25px", position: "relative", alignSelf: "center", paddingTop: "5px" }}>
+                    <Box className="custom-box-style">
                       <LinearProgress />
                     </Box>
                     <div className="cancel-btn">
                       <IoMdClose fill="red" size={15} onClick={cancelDownload} />
                     </div>
                   </div>
-                ) : (
-                  <>
+                  </div>
+                 :
+                 <>
                     <Button
                       id="download-button"
                       aria-controls={anchorEl ? 'download-menu' : undefined}
@@ -894,7 +1204,7 @@ const FileModal = (props) => {
                     >
                       Download
                     </Button>
-                    <Menu
+                        <Menu
                       id="download-menu"
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
@@ -960,12 +1270,7 @@ const FileModal = (props) => {
                         </Menu>
                       </Menu>
                     </Menu>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-          <Modal
+                     <Modal
             centered
             open={showConsentForm}
             footer={null}
@@ -985,11 +1290,16 @@ const FileModal = (props) => {
                 5. Any SR raised for data sets, service timeline is 7 working days.
               </p>
               <div>
-                <Input type='checkbox' id='agree' checked={isChecked} onChange={handleConsentBoxChange} />&nbsp;
+                <Input 
+                type='checkbox' 
+                id='agree' 
+                checked={isChecked} 
+                onChange={handleConsentBoxChange} 
+                />&nbsp;
                 <label htmlFor='agree'> I Agree </label>
               </div>
               <br />
-              {isChecked && fileDownloadRequest && fileDownloadRequest.startsWith("F") && (
+              {isChecked && fileDownloadRequest && fileDownloadRequest.startsWith("F") && 
                 <div>
                   Rows Per Sheet:
                   <Row>
@@ -997,23 +1307,274 @@ const FileModal = (props) => {
                       <Slider min={1} max={numRows} onChange={onChange} value={typeof inputValue === 'number' ? inputValue : 0} />
                     </Col>
                     <Col span={4}>
-                      <InputNumber min={1} max={numRows} style={{ margin: '0 16px' }} value={inputValue} onChange={onChange} />
+                      <InputNumber 
+                      min={1} 
+                      max={numRows}
+                      onChange={onChange}
+                      value={typeof inputValue === 'number' ? inputValue : 0 }  
+                      />
+                    </Col>
+                    <Col span={4}>
+                      <InputNumber 
+                      min={1} 
+                      max={numRows}
+                      style ={{margin: '0 16px'}}
+                      value={inputValue} 
+                      onChange={onChange}
+                      />
                     </Col>
                   </Row>
-                </div>
-              )}
-              <Button variant="outlined" onClick={handleConsentFormSubmit} disabled={!isChecked || isSubmitting} style={{ width: '75px' }}>
+                </div>}
+              <Button 
+              variant="outlined" 
+              onClick={handleConsentFormSubmit} 
+              disabled={!isChecked || isSubmitting} 
+              style={{ width: '75px' }}
+              >
                 {isSubmitting ? "Submitting..." : "OK"}
               </Button>&nbsp;&nbsp;
-              <Button variant="outlined" onClick={handleConsentFormClose} disabled={isSubmitting} style={{ width: '75px' }}>
+              <Button 
+              variant="outlined" 
+              onClick={handleConsentFormClose} 
+              disabled={isSubmitting} 
+              style={{ width: '75px' }}
+              >
                 Close
               </Button>
             </div>
           </Modal>
+          </> }
         </div>
+}
+</div>
+</div>
+</div>
       </Modal>
     </>
   );
 };
 
-export default FileModal;
+export default FileModal1;
+
+
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    align-self: center;
+    justify-content: center;
+    /* padding: 1rem; Added padding for breathing room on smaller screens */
+  }
+
+
+    .modalHeaderWrapper {
+  display: flex;
+  padding-bottom: 20px;
+}
+
+.modalHeaderContent {
+  display: flex;
+  justify-content: space-between; /* important */
+  align-items: center;
+  flex-wrap: wrap; /* allows responsiveness */
+  gap: 1rem; /* gives spacing between items */
+  width: 100%;
+  padding: 0 1rem;
+}
+
+ .modalViewComponent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+  }
+
+  .inputlabel {
+    height : 32px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .selectColumnForm {
+  width: 150px;
+  height: 32px;
+}
+
+
+.selectColumnDropdown {
+  width: 150px;
+  height: 32px;
+  font-size: 12px;
+  border-radius: 0.4rem;
+  border-bottom-right-radius: 0rem;
+  border-top-right-radius: 0rem;
+}
+
+.textSearchForm {
+  min-width: 150px;
+  height: 32px;
+}
+
+.textSearchInput {
+  width: 150px;
+  height: 32px;
+}
+
+.dateRangeForm {
+  min-width: 150px;
+  height: 32px;
+}
+
+.titleReport_date {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.headerContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 1%;
+    padding-left: 1%;
+    width: 98%;
+  }
+
+  .loader-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.loader-text {
+  align-self: center;
+  /* font-size: 16px;
+  color: #333;
+  margin-top: 1rem; */
+}
+
+ .tableContent {
+    max-height: 46vh;
+    margin-left: 1%;
+    margin-top: -2px;
+    margin-bottom: 10px;
+  }
+
+   .modalContentsModule
+  {
+    color: #36556b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem !important;
+    font-style: normal;
+    font-weight: 600 !important;
+    line-height: normal;
+    margin-left: 12px;
+  }
+
+  .titleReport {
+    font-size: 15px;
+    margin-left: 2%;
+    margin-top: 2%;
+  }
+
+   .modalContentsModule .titleReport
+  {
+    color: #36556b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-right: 24px;
+  }
+
+  .paginationNbutton {
+    display: flex;
+    align-items: center;
+    width: 1150px;
+    margin-bottom: 32px;
+    height: 51px;
+    margin-left: 54px;
+  }
+
+  .pagination-container{
+    display: flex;
+    gap: 1vh;
+    width: 70%;
+  }
+
+   .paginationNbuttonModal {
+    display: flex;
+    gap: 4vw;
+    position: relative;
+  }
+
+  .rows-per-page{
+    display: flex;
+    gap: 1vh;
+    width: 100%;
+  }
+
+  .rows-per{
+    display: flex;
+    align-items: center;
+  }
+
+  .rows-text{
+    margin-left: 1vw;
+  }
+
+  .btnSec {
+    width: 30%;
+    float: right;
+    position: relative;
+    display: flex;
+    margin-right: 38px;
+    justify-content: end;
+  }
+
+ .btnSec.Dropdown {
+    color: #365568;
+    border-radius: 1rem;
+    box-sizing: border-box;
+    float: right;
+    position: relative;
+  }
+
+  .downloading-section{
+    width: 100%;
+  }
+
+  .downloading-sec {
+    display: flex;
+    gap: 15px;
+  }
+
+  .custom-box-style {
+  width: 35%;
+  height: 25px;
+  position: relative;
+  align-self: center;
+  padding-top: 5px;
+}
+
+.cancel-btn{
+  padding-top: 5px;
+}
+
+  @media (max-width: 1000px) {
+    .btnSec select {
+      width: 6vw;
+      height: 4vh;
+      color: #36556B;
+      border: 1px solid #36556B;
+      background-color: white;
+      border-radius: 5rem;
+      padding: 1vh 0vw 2vw -1vh; /* Top: 1vh, Right: 0, Bottom: 2vw, Left: 0.5vw */
+      font-size: 0.7rem;
+    }
+  }
+
