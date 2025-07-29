@@ -1578,3 +1578,760 @@ export default FileModal1;
     }
   }
 
+
+
+///////////////////latest original
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    align-self: center;
+    justify-content: center;
+    /* padding: 1rem; Added padding for breathing room on smaller screens */
+  }
+
+
+.rs-dropdown-menu {
+  position: relative;
+}
+
+.rs-dropdown-menu .rs-dropdown-menu {
+  right: auto;
+  left : 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.paginationNbuttonModal {
+    display: flex;
+    gap: 4vw;
+    position: relative;
+  }
+
+  .pagination {
+    width : 85%;
+    float: left;
+    position: relative;
+    display: flex;
+    margin-top: 3vh;
+    margin-left: 0vw;
+  }
+
+  .btnSec {
+    width: 30%;
+    float: right;
+    position: relative;
+    display: flex;
+    margin-right: 38px;
+    justify-content: end;
+  }
+
+  .cancel_fileModal_btn {
+    color: #36556B;
+    border-radius: 0.4rem;
+    box-sizing: border-box;
+    float: right;
+    position: relative;
+    padding: 6px 20px 6px 20px;
+    margin: auto;
+  }
+
+  .cancel_fileModal_btn:hover {
+      background: #e4e4f1e4;
+      color: #36556B;
+  }
+
+   .btnSec.Dropdown {
+    color: #365568;
+    border-radius: 1rem;
+    box-sizing: border-box;
+    float: right;
+    position: relative;
+  }
+
+  .ant-pagination .ant-pagination-item:not(.ant-pagination-item-active):hover {
+    transition: all 0.2s;
+  }
+
+  .ant-pagination .ant-pagination-item-active {
+    background-color: #4968ff;
+    color: white !important;
+    font-weight: 400;
+    border-color: #4968ff;
+  }
+
+  .ant-pagination .ant-pagination-item-active a {
+    color: white !important;
+  }
+
+  .headerContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 1%;
+    padding-left: 1%;
+    width: 98%;
+  }
+
+  .titleReport_date {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.modalSelect_search{
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+:where(.css-dev-only-do-not-override-1vr7spz).ant-input {
+    border-radius: 0px;
+    border-bottom-right-radius: 0.4rem;
+    border-top-right-radius: 0.4rem;
+    border: 1px solid #E7E7E7;
+  }
+
+   .endhead {
+    margin-top: 35px;
+    justify-content: center;
+    display: flex;
+  }
+
+  .customSelect {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* background: url('../../../../Assets/Union\ 2.svg') no-repeat calc(100% - 0.9vw) center; */
+    padding-right: 1vw;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding-top: -1vh;
+    font-size: 1rem;
+  }
+
+
+    .search-inputforModal {
+    background: #FFFFFF;
+    height: 5vh;
+    position: relative;
+    border: 1px solid #365568;
+    width: 12vw;
+    border-radius: 32px;
+    margin-right: 1vw;
+    padding-left: 0.5vw;
+  }
+
+
+    .requestAccessBtnforModal {
+    margin-left: 1vw;
+    width: 10vw;
+    height: 5vh;
+    background: linear-gradient(180deg, #F8A716 0%, #E75126 100%);
+    border-radius: 32px;
+    border: none;
+    color: #FFFFFF;
+    font-family: Arial;
+    font-size: 1.9vh;
+    line-height: normal;
+    font-weight: 400;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+    .tableContent {
+    max-height: 46vh;
+    margin-left: 1%;
+    margin-top: -2px;
+    margin-bottom: 10px;
+  }
+
+
+  @media (max-width: 1000px) {
+    .btnSec select {
+      width: 6vw;
+      height: 4vh;
+      color: #36556B;
+      border: 1px solid #36556B;
+      background-color: white;
+      border-radius: 5rem;
+      padding: 1vh 0vw 2vw -1vh; /* Top: 1vh, Right: 0, Bottom: 2vw, Left: 0.5vw */
+      padding-left: 0.5vw;
+      font-size: 0.7rem;
+    }
+  }
+
+    :where(.css-1vr7spz).ant-select-single .ant-select-selector {
+      border-radius: 0rem !important;
+    }
+
+
+      .filemodal_header_noclose.modal-header, .filemodal_header.modal-header {
+    display: flex;
+    position: relative;
+    height: 60px !important;
+    border-bottom: none !important;
+  }
+
+  .filemodal_header_noclose.modal-header {
+    width: 100%;
+    text-wrap: nowrap;
+  }
+
+   .modal-header .btn-close {
+    margin-top: -11px;
+  }
+
+  .modal-dialog-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .multiselect {
+    width: 100%;
+  }
+
+   .ant-collapse-header {
+    position: relative;
+  }
+
+   .modalViewComponent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+  }
+
+   .fileModalCheckbox .modelCheckboxes input[type="checkbox"] {
+    height: 14px; /* Increased height */
+    width: 14px;
+    margin-right: 4px; /* Added right margin */
+  }
+
+   .modalContentsModule .titleReport
+  {
+    color: #36556b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-right: 24px;
+  }
+
+
+
+.modalHeaderContent {
+  display: flex;
+  justify-content: space-between; /* important */
+  align-items: center;
+  flex-wrap: wrap; /* allows responsiveness */
+  gap: 1rem; /* gives spacing between items */
+  width: 100%;
+  padding: 0 1rem;
+}
+
+
+.modalContentsModule
+  {
+    color: #36556b;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem !important;
+    font-style: normal;
+    font-weight: 600 !important;
+    line-height: normal;
+    margin-left: 12px;
+  }
+
+  .fileModalCheckbox {
+    background: none !important;
+  }
+
+  .paginationNbutton {
+    display: flex;
+    align-items: center;
+    width: 1150px;
+    margin-bottom: 32px;
+    height: 51px;
+    margin-left: 54px;
+  }
+
+  .paginationNbuttons {
+    display: flex;
+    align-items: center;
+    width: 1150px;
+    margin-bottom: 32px;
+    height: 51px;
+    margin-left: 54px;
+  }
+
+  #download-button {
+    color: white;
+    background: #006A71;
+  }
+
+
+   .modalHeaderWrapper {
+  display: flex;
+  padding-bottom: 20px;
+}
+
+  .inputlabel {
+    height : 32px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .selectColumnForm {
+  width: 150px;
+  height: 32px;
+}
+
+
+.selectColumnDropdown {
+  width: 150px;
+  height: 32px;
+  font-size: 12px;
+  border-radius: 0.4rem;
+  border-bottom-right-radius: 0rem;
+  border-top-right-radius: 0rem;
+}
+
+.textSearchForm {
+  min-width: 150px;
+  height: 32px;
+}
+
+.textSearchInput {
+  width: 150px;
+  height: 32px;
+}
+
+.dateRangeForm {
+  min-width: 150px;
+  height: 32px;
+}
+
+
+
+
+
+  .loader-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.loader-text {
+  align-self: center;
+  /* font-size: 16px;
+  color: #333;
+  margin-top: 1rem; */
+}
+
+ .tableContent {
+    max-height: 46vh;
+    margin-left: 1%;
+    margin-top: -2px;
+    margin-bottom: 10px;
+  }
+
+   
+
+  .titleReport {
+    font-size: 15px;
+    margin-left: 2%;
+    margin-top: 2%;
+  }
+
+  
+
+
+  
+
+  .pagination-container{
+    display: flex;
+    gap: 1vh;
+    width: 70%;
+  }
+
+  .rows-per-page{
+    display: flex;
+    gap: 1vh;
+    width: 100%;
+  }
+
+  .rows-per{
+    display: flex;
+    align-items: center;
+  }
+
+  .rows-text{
+    margin-left: 1vw;
+  }
+
+
+  .downloading-section{
+    width: 100%;
+  }
+
+  .downloading-sec {
+    display: flex;
+    gap: 15px;
+  }
+
+  .custom-box-style {
+  width: 35%;
+  height: 25px;
+  position: relative;
+  align-self: center;
+  padding-top: 5px;
+}
+
+.cancel-btn{
+  padding-top: 5px;
+}
+
+@media (max-width: 1000px) {
+    .btnSec select {
+      width: 6vw;
+      height: 4vh;
+      color: #36556B;
+      border: 1px solid #36556B;
+      background-color: white;
+      border-radius: 5rem;
+      padding: 1vh 0vw 2vw -1vh; /* Top: 1vh, Right: 0, Bottom: 2vw, Left: 0.5vw */
+      padding-left: 0.5vw;
+      font-size: 0.7rem;
+    }
+  }
+
+
+@media (min-width: 1921px) {
+  
+}
+
+
+
+//////mediauery
+
+@media (max-width: 1440px) {
+  .modalContent {
+    font-size: 1.1rem;
+    padding: 0.9rem;
+  }
+  
+   .modalContentsModule {
+    font-size: 0.95rem !important;
+    margin-left: 10px;
+  }
+  .modalContentsModule .titleReport {
+    font-size: 1.4rem;
+  }
+
+  .modalHeaderWrapper {
+    padding-bottom: 18px;
+    display: flex;
+  }
+
+  .modalHeaderContent {
+    gap: 0.8rem;
+    padding: 0 0.8rem;
+  }
+
+   .modalViewComponent {
+    gap: 10px;
+    display: flex;
+    margin-right: 10px;
+  }
+
+  #formControl1{
+    min-width: 220px;
+  }
+
+  .inputlabel {
+    height : 28px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .AntSelect1 {
+  height: 38px;
+}
+
+}
+
+/* 1280px laptops */
+@media (max-width: 1280px) {
+  .modalContent {
+    font-size: 1rem;
+    padding: 0.85rem;
+  }
+
+    .modalContentsModule {
+    font-size: 0.9rem !important;
+    margin-left: 8px;
+  }
+  .modalContentsModule .titleReport {
+    font-size: 1.3rem;
+  }
+
+  .modalHeaderWrapper {
+    padding-bottom: 16px;
+    display: flex;
+  }
+
+  .modalHeaderContent {
+    gap: 0.7rem;
+    padding: 0 0.7rem;
+  }
+
+   .modalViewComponent {
+    gap: 10px;
+    margin-right: 8px;
+    display: flex;
+  }
+
+  #formControl1{
+    min-width: 200px;
+  }
+
+  .inputlabel {
+    height : 26px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+    font-size: 10px;
+  }
+
+   .AntSelect1 {
+  height: 36px;
+}
+}
+
+/* 1024px tablets */
+@media (max-width: 1024px) {
+  .modalContent {
+    font-size: 0.95rem;
+    padding: 0.8rem;
+  }
+
+   .modalContentsModule .titleReport {
+    font-size: 1.2rem;
+  }
+
+  .modalHeaderWrapper {
+    padding-bottom: 14px;
+    display: flex;
+  }
+
+  .modalHeaderContent {
+    gap: 0.6rem;
+    padding: 0 0.6rem;
+  }
+
+  .modalViewComponent {
+    gap: 8px;
+    margin-right: 6px;
+    display: flex;
+  }
+  #formControl1{
+    min-width: 180px;
+  }
+
+  .inputlabel {
+    height : 24px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+    font-size: 10px;
+  }
+
+  .AntSelect1 {
+  height: 34px;
+}
+}
+
+/* 768px tablets portrait */
+@media (max-width: 768px) {
+  .modalContent {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+    gap: 1.5vh;
+  }
+
+   .modalContentsModule .titleReport {
+    font-size: 1.1rem;
+    margin-right: 16px;
+  }
+
+  .modalHeaderWrapper {
+    padding-bottom: 12px;
+    display: flex;
+  }
+
+  .modalHeaderContent {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .modalViewComponent {
+    align-items: flex-start;
+    gap: 8px;
+    margin-right: 0;
+    display: flex;
+  }
+
+#formControl1{
+    min-width: 160px;
+  }
+
+  .inputlabel {
+    height : 22px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+    font-size: 8px;
+  }
+
+  .AntSelect1 {
+  height: 32px;
+}
+}
+
+/* 667px large phones */
+@media (max-width: 667px) {
+  .modalContent {
+    font-size: 0.85rem;
+    padding: 0.7rem;
+    text-align: center;
+  }
+
+  .modalContentsModule .titleReport {
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+
+  .modalHeaderWrapper {
+    padding-bottom: 10px;
+    display: flex;
+  }
+
+  .modalHeaderContent {
+    gap: 0.4rem;
+    padding: 0 0.4rem;
+  }
+
+   .modalViewComponent {
+    gap: 6px;
+  }
+
+  #formControl1{
+    min-width: 160px;
+  }
+
+  .inputlabel {
+    height : 20px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+    font-size: 8px;
+  }
+
+  .AntSelect1 {
+  height: 30px;
+}
+}
+
+/* 414px–375px phones */
+@media (max-width: 414px) {
+  .modalContent {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+
+    .modalContentsModule {
+    margin-left: 6px;
+  }
+  .modalContentsModule .titleReport {
+    font-size: 1rem;
+    margin-right: 10px;
+  }
+
+  .modalHeaderWrapper {
+    padding-bottom: 8px;
+    display: flex;
+  }
+
+  .modalHeaderContent {
+    gap: 0.3rem;
+    padding: 0 0.3rem;
+  }
+
+  .modalViewComponent {
+    gap: 5px;
+    padding-left: 4px;
+  }
+#formControl1{
+    min-width: 140px;
+  }
+
+  .inputlabel {
+    height : 18px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+    font-size: 8px;
+  }
+
+  .AntSelect1 {
+  height: 28px;
+}
+}
+
+/* 320px very small devices */
+@media (max-width: 320px) {
+  .modalContent {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    gap: 1vh;
+  }
+
+  .modalContentsModule .titleReport {
+    font-size: 0.95rem;
+    margin-right: 6px;
+  }
+
+  .modalHeaderWrapper {
+
+    padding-bottom: 6px;
+    display: flex;
+  }
+
+  .modalHeaderContent {
+    gap: 0.25rem;
+    padding: 0 0.25rem;
+  }
+
+  .modalViewComponent {
+    gap: 4px;
+    font-size: 0.9rem;
+  }
+
+  #formControl1{
+    min-width: 120px;
+  }
+
+  .inputlabel {
+    height : 16px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    font-size: 6px;
+  }
+  .AntSelect1 {
+  height: 26px;
+}
+}
+

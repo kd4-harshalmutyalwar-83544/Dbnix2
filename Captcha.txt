@@ -1,0 +1,135 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+//using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.Drawing.Text;
+using System.Drawing.Drawing2D;
+using System.IO;
+namespace Captcha1.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CaptchaController : ControllerBase
+    {
+
+            private const string CaptchaCodeKey = "CaptchaCode";
+            private const string CaptchaTimeKey = "CaptchaTime";
+            private const string CaptchaFailKey = "CaptchaFailCount";
+
+            // GET: api/captcha/generate
+            [HttpGet("generate")]
+            public IActionResult GenerateCaptcha()
+            {
+                try
+                {
+                    string code = GenerateRandomCode(5);
+                    HttpContext.Session.SetString(CaptchaCodeKey, code);
+                    HttpContext.Session.SetString(CaptchaTimeKey, DateTime.UtcNow.ToString());
+                    HttpContext.Session.SetInt32(CaptchaFailKey, 0);
+
+                    Bitmap bitmap = new Bitmap(180, 60);
+                    var graphics = Graphics.FromImage(bitmap);
+                //graphics.Clear(Color.LightYellow);
+                graphics.Clear(Color.White);
+
+                var random = new Random();
+                    Font[] fonts = new Font[]
+                    {
+                    new Font("Arial", 28, FontStyle.Bold),
+                    new Font("Comic Sans MS", 28, FontStyle.Bold | FontStyle.Italic),
+                    new Font("Courier New", 28, FontStyle.Bold),
+                    new Font("Times New Roman", 28, FontStyle.Bold)
+                    };
+
+                //Color[] colors = new Color[]
+                //{
+                //Color.Black, Color.Red, Color.Green, Color.Blue, Color.Purple,
+                //Color.Orange, Color.Brown, Color.DarkCyan
+                //};
+
+                Color[] colors = new Color[]
+{
+    Color.Black, Color.Red, Color.Green, Color.Blue, Color.Purple,
+    Color.Orange, Color.Brown, Color.DarkCyan,
+    Color.DarkBlue, Color.Maroon, Color.Teal, Color.DarkMagenta
+};
+
+                // Add background lines
+                for (int i = 0; i < 12; i++)
+                    {
+                        int x1 = random.Next(bitmap.Width);
+                        int y1 = random.Next(bitmap.Height);
+                        int x2 = random.Next(bitmap.Width);
+                        int y2 = random.Next(bitmap.Height);
+                        graphics.DrawLine(new Pen(Color.LightGray, 1), x1, y1, x2, y2);
+                    }
+
+                    // Add ellipses as noise
+                    for (int i = 0; i < 5; i++)
+                    {
+                        int x = random.Next(bitmap.Width);
+                        int y = random.Next(bitmap.Height);
+                        int w = random.Next(10, 30);
+                        int h = random.Next(10, 30);
+                        graphics.FillEllipse(new SolidBrush(Color.FromArgb(50, random.Next(256), random.Next(256), random.Next(256))), x, y, w, h);
+                    }
+
+                    // Draw CAPTCHA letters
+                    for (int i = 0; i < code.Length; i++)
+                    {
+                        using (GraphicsPath path = new GraphicsPath())
+                        {
+                            char c = code[i];
+                            Font font = fonts[random.Next(fonts.Length)];
+                            Color color = colors[random.Next(colors.Length)];
+                            float angle = random.Next(-30, 30);
+
+                            float x = 15 + i * 25;
+                            float y = 10;
+
+                            path.AddString(
+                                c.ToString(),
+                                font.FontFamily,
+                                (int)font.Style,
+                                28,
+                                new PointF(x, y),
+                                StringFormat.GenericDefault
+                            );
+
+                            using (Matrix matrix = new Matrix())
+                            {
+                                matrix.RotateAt(angle, new PointF(x + 10, y + 15));
+                                path.Transform(matrix);
+                            }
+
+                            graphics.FillPath(new SolidBrush(color), path);
+                        }
+                    }
+
+                    using var ms = new MemoryStream();
+                    bitmap.Save(ms, ImageFormat.Jpeg);
+                    return File(ms.ToArray(), "image/jpeg");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest($"Error generating CAPTCHA: {ex.Message}");
+                }
+            }
+
+        private string GenerateRandomCode(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+    }
+    }
